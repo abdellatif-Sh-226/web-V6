@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BudgetCollab</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- SAVE INDICATOR -->
+<div id="_saveInd" class="save-indicator">✓ Sauvegardé</div>
+
+<!-- LOGIN ONLY (no register) -->
+<div class="auth-wrap" id="authPage">
+  <div class="auth-box">
+    <div class="auth-logo">💰 BudgetCollab</div>
+    <div class="auth-sub">Connexion — Les comptes sont créés par l'administrateur</div>
+    <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="vous@exemple.com"></div>
+    <div class="form-group"><label>Mot de passe</label><input type="password" id="loginPwd" placeholder="••••••••"></div>
+    <button class="btn" onclick="doLogin()">Se connecter</button>
+    <div class="auth-err err" id="authErr"></div>
+    <div class="demo-accounts">
+      <div class="demo-title">Comptes de démonstration :</div>
+      <div>👑 Admin : <strong>admin@demo.com</strong> / <strong>admin123</strong></div>
+      <div>👤 User : <strong>sara@demo.com</strong> / <strong>sara123</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="mainApp" style="display:none">
+  <div class="sidebar">
+    <div class="sidebar-logo">💰 BudgetCollab</div>
+    <div class="sidebar-user">
+      <div class="avatar" id="sidebarAvatar">A</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebarName">Admin</div>
+        <div id="sidebarRoleBadge"></div>
+      </div>
+    </div>
+    <nav class="nav" id="sidebarNav"></nav>
+    <div class="sidebar-bottom">
+      <div class="nav-item" onclick="doLogout()"><span class="nav-icon">🚪</span>Déconnexion</div>
+    </div>
+  </div>
+  <main class="main" id="mainContent"></main>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="txModal">
+  <div class="modal">
+    <div class="modal-title" id="txModalTitle">Ajouter une transaction</div>
+    <div class="form-group"><label>Type</label><select id="txType"><option value="income">Revenu</option><option value="expense">Dépense</option></select></div>
+    <div class="form-group"><label>Description</label><input type="text" id="txDesc" placeholder="Ex: Loyer, Salaire..."></div>
+    <div class="form-group"><label>Montant (TND)</label><input type="number" id="txAmount" placeholder="0.00" min="0" step="0.01"></div>
+    <div class="form-group"><label>Date</label><input type="date" id="txDate"></div>
+    <div class="form-group"><label>Destination</label><select id="txDest" onchange="syncTxTypeToDestination()"><option value="wallet">📱 Mon portefeuille</option></select></div>
+    <div class="form-group"><label>Catégorie</label><select id="txCat"></select></div>
+    <div class="form-group"><label>Notes (optionnel)</label><textarea id="txNotes" rows="2" placeholder="..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('txModal')">Annuler</button>
+      <button class="btn" onclick="saveTx()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="budgetModal">
+  <div class="modal">
+    <div class="modal-title">Créer un budget</div>
+    <div class="form-group"><label>Nom du budget</label><input type="text" id="budgetName" placeholder="Budget mensuel..."></div>
+    <div class="form-group"><label>Période</label><select id="budgetPeriod"><option value="monthly">Mensuel</option><option value="weekly">Hebdomadaire</option><option value="custom">Personnalisé</option></select></div>
+    <div class="form-group"><label>Plafond global (TND)</label><input type="number" id="budgetLimit" placeholder="1000" min="0"></div>
+    <div class="form-group"><label>Catégorie (optionnel)</label><select id="budgetCat"><option value="">Toutes les catégories</option></select></div>
+    <div class="form-group"><label>Date de début</label><input type="date" id="budgetStart"></div>
+    <div class="form-group"><label>Date de fin</label><input type="date" id="budgetEnd"></div>
+    <div id="budgetUserRow" class="form-group" style="display:none"><label>Assigner à (Admin seulement)</label><select id="budgetUser"></select></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('budgetModal')">Annuler</button>
+      <button class="btn" onclick="saveBudget()">Créer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="catModal">
+  <div class="modal">
+    <div class="modal-title">Ajouter une catégorie</div>
+    <div class="form-group"><label>Nom</label><input type="text" id="catName" placeholder="Ex: Loisirs..."></div>
+    <div class="form-group"><label>Couleur</label><input type="color" id="catColor" value="#e94560" class="color-input"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('catModal')">Annuler</button>
+      <button class="btn" onclick="saveCat()">Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="sharedModal">
+  <div class="modal">
+    <div class="modal-title">Créer un budget partagé</div>
+    <div class="form-group"><label>Nom du groupe</label><input type="text" id="sharedName" placeholder="Ex: Colocation Tunis..."></div>
+    <div class="form-group"><label>Description</label><input type="text" id="sharedDesc" placeholder="Budget commun pour..."></div>
+    <div class="form-group"><label>Plafond (TND)</label><input type="number" id="sharedLimit" placeholder="2000"></div>
+    <div class="form-group"><label>Ajouter membre (email)</label>
+      <div class="shared-member-row"><input type="email" id="sharedMemberEmail" placeholder="membre@email.com"><button class="btn btn-secondary btn-sm" onclick="addSharedMember()">+</button></div>
+    </div>
+    <div id="sharedMembersList" class="shared-members-list"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('sharedModal')">Annuler</button>
+      <button class="btn" onclick="saveShared()">Créer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addUserModal">
+  <div class="modal">
+    <div class="modal-title">➕ Créer un compte utilisateur</div>
+    <div class="admin-note">
+      Seul l'administrateur peut créer des comptes. L'utilisateur recevra ses identifiants pour se connecter.
+    </div>
+    <div class="form-group"><label>Nom complet</label><input type="text" id="newUserName" placeholder="Ahmed Ben Ali"></div>
+    <div class="form-group"><label>Email</label><input type="email" id="newUserEmail" placeholder="ahmed@exemple.com"></div>
+    <div class="form-group"><label>Mot de passe</label><input type="password" id="newUserPwd" placeholder="••••••••"></div>
+    <div class="form-group"><label>Rôle</label>
+      <select id="newUserRole"><option value="user">Utilisateur</option><option value="admin">Administrateur</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('addUserModal')">Annuler</button>
+      <button class="btn" onclick="saveNewUser()">Créer le compte</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="profileModal">
+  <div class="modal">
+    <div class="modal-title">✏️ Modifier mon profil</div>
+    <div class="form-group"><label>Nom complet</label><input type="text" id="profName"></div>
+    <div class="form-group"><label>Email</label><input type="email" id="profEmail"></div>
+    <div class="form-group"><label>Nouveau mot de passe (laisser vide pour ne pas changer)</label><input type="password" id="profPwd" placeholder="••••••••"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('profileModal')">Annuler</button>
+      <button class="btn" onclick="saveProfile()">Enregistrer</button>
+    </div>
+    <div class="auth-err" id="profMsg"></div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/pages.js"></script>
+<script src="js/transactions.js"></script>
+<script src="js/budgets.js"></script>
+<script src="js/categories.js"></script>
+<script src="js/shared.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/init.js"></script>
+</body>
+</html>
