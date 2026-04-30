@@ -13,7 +13,9 @@ async function doLogin() {
     if (!CU) {
       throw new Error('Utilisateur introuvable après connexion.');
     }
+    ensureDefaultPortfolio();
     document.getElementById('authErr').textContent = '';
+    startAutoRefresh();
     enterApp();
   } catch (e) {
     document.getElementById('authErr').textContent = e.message || 'Email ou mot de passe incorrect.';
@@ -21,6 +23,7 @@ async function doLogin() {
 }
 
 async function doLogout() {
+  stopAutoRefresh();
   try {
     await apiFetch('api/logout.php', { method: 'POST' });
   } catch (e) {
@@ -56,4 +59,58 @@ function requestDeleteAccount() {
   if (!confirm('Soumettre une demande de suppression de compte ?')) return;
   DB.set('users', getUsers().map(u => (u.id === CU.id ? { ...u, deleteRequest: true } : u)));
   alert('Demande soumise. Un administrateur la traitera.');
+}
+
+let autoRefreshInterval = null;
+
+function startAutoRefresh() {
+  if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+  autoRefreshInterval = setInterval(async () => {
+    try {
+      const data = await apiFetch('api/data.php', { method: 'GET' });
+      const oldTxCount = (_cache.transactions || []).length;
+      const newTxCount = (data.transactions || []).length;
+      _cache.transactions = data.transactions || [];
+      _cache.sharedBudgets = data.sharedBudgets || [];
+      const currentPage = document.querySelector('.page.active')?.id;
+      if (oldTxCount !== newTxCount || currentPage === 'transactions' || currentPage === 'shared' || currentPage === 'dashboard') {
+        if (currentPage === 'transactions') renderTransactionsTable();
+        if (currentPage === 'shared') renderShared();
+        if (currentPage === 'dashboard') renderDashboard();
+      }
+    } catch (e) {
+      console.log('Auto-refresh check failed', e);
+    }
+  }, 5000);
+}
+
+function stopAutoRefresh() {
+  if (autoRefreshInterval) {
+    clearInterval(autoRefreshInterval);
+    autoRefreshInterval = null;
+  }
+}
+
+function ensureDefaultPortfolio() {
+  const budgets = DB.get('budgets') || [];
+  const hasPortfolio = budgets.some(b => b.userId === CU.id);
+  if (!hasPortfolio) {
+    const s = new Date().toISOString().split('T')[0];
+    const e = (() => {
+      const d = new Date();
+      d.setMonth(d.getMonth() + 1);
+      return d.toISOString().split('T')[0];
+    })();
+    budgets.push({
+      id: uid(),
+      userId: CU.id,
+      name: 'Portefeuille',
+      period: 'monthly',
+      limit: 99999,
+      catId: '',
+      start: s,
+      end: e
+    });
+    DB.set('budgets', budgets);
+  }
 }

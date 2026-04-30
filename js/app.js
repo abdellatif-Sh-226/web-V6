@@ -88,11 +88,19 @@ function getVisibleCatsForUser() {
   return [...getBaseCats(), ...getUserCats(), ...groupCats];
 }
 
-function getGroupName(destId) {
+function getBudgetName(destId) {
   if (destId === 'wallet') return '📱 Mon portefeuille';
-  const gid = destId.replace('group-', '');
-  const g = (DB.get('sharedBudgets') || []).find(s => s.id === gid);
-  return g ? `👥 ${g.name}` : '—';
+  if (destId.startsWith('budget-')) {
+    const bid = destId.replace('budget-', '');
+    const b = (DB.get('budgets') || []).find(b => b.id === bid);
+    return b ? `🎯 ${b.name}` : '🎯 Budget';
+  }
+  if (destId.startsWith('group-')) {
+    const gid = destId.replace('group-', '');
+    const g = (DB.get('sharedBudgets') || []).find(s => s.id === gid);
+    return g ? `👥 ${g.name}` : '👥 Groupe';
+  }
+  return '—';
 }
 
 function getScopedTxs() {

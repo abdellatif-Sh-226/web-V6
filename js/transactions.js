@@ -100,7 +100,7 @@ function renderTransactionsTable() {
       <td>${t.desc}${t.notes ? `<div class="note-text">${t.notes}</div>` : ''}</td>
       <td><span class="badge" style="background:${getCatColor(t.catId)}22;color:${getCatColor(t.catId)}">${getCatName(t.catId)}</span></td>
       <td><span class="badge badge-${t.type}">${t.type === 'income' ? 'Revenu' : 'Dépense'}</span></td>
-      <td><span class="badge" style="background:rgba(255,255,255,0.08);color:var(--text-muted);font-size:11px">${t.dest === 'wallet' ? '📱 Portefeuille' : t.dest.startsWith('group-') ? '👥 Groupe' : '🎯 Budget'}</span></td>
+      <td><span class="badge" style="background:rgba(255,255,255,0.08);color:var(--text-muted);font-size:11px">${getBudgetName(t.dest)}</span></td>
       ${CU.role === 'admin' ? `<td><span class="pill" style="font-size:12px">${getUserName(t.userId)}</span></td>` : ''}
       <td style="font-weight:600;color:${t.type === 'income' ? 'var(--success)' : 'var(--danger)'}">${t.type === 'income' ? '+' : '−'}${fmt(t.amount)}</td>
       <td><div class="actions">
