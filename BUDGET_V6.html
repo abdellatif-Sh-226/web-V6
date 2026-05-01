@@ -750,8 +750,18 @@ function saveTx(){
 function editTx(id){openTxModal(id);}
 function deleteTx(id){
   if(!confirm('Supprimer cette transaction ?')) return;
-  DB.set('transactions',(DB.get('transactions')||[]).filter(t=>t.id!==id));
-  renderTransactionsTable();
+
+  // Immediately delete from database
+  apiFetch(`api/delete_transaction.php?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
+    .then(() => {
+      // Remove from local cache after successful database deletion
+      DB.set('transactions',(DB.get('transactions')||[]).filter(t=>t.id!==id));
+      renderTransactionsTable();
+    })
+    .catch(error => {
+      console.error('Failed to delete transaction:', error);
+      alert('Erreur lors de la suppression de la transaction');
+    });
 }
 
 // BUDGETS

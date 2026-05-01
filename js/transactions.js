@@ -197,12 +197,23 @@ function editTx(id) {
 
 function deleteTx(id) {
   if (!confirm('Supprimer cette transaction ?')) return;
-  const txs = DB.get('transactions') || [];
-  const tx = txs.find(t => t.id === id);
-  DB.set('transactions', txs.filter(t => t.id !== id));
-  renderTransactionsTable();
-  // Also refresh shared budgets if this transaction was for a group
-  if (tx && tx.dest && tx.dest.startsWith('group-') && typeof renderShared === 'function') {
-    renderShared();
-  }
+
+  // Immediately delete from database
+  apiFetch(`api/delete_transaction.php?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
+    .then(() => {
+      // Remove from local cache after successful database deletion
+      const txs = DB.get('transactions') || [];
+      const tx = txs.find(t => t.id === id);
+      DB.set('transactions', txs.filter(t => t.id !== id));
+      renderTransactionsTable();
+
+      // Also refresh shared budgets if this transaction was for a group
+      if (tx && tx.dest && tx.dest.startsWith('group-') && typeof renderShared === 'function') {
+        renderShared();
+      }
+    })
+    .catch(error => {
+      console.error('Failed to delete transaction:', error);
+      alert('Erreur lors de la suppression de la transaction');
+    });
 }
