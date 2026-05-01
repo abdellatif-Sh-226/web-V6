@@ -185,6 +185,10 @@ function saveTx() {
   DB.set('transactions', txs);
   closeModal('txModal');
   renderTransactionsTable();
+  // Also refresh shared budgets if this transaction is for a group
+  if (dest.startsWith('group-') && typeof renderShared === 'function') {
+    renderShared();
+  }
 }
 
 function editTx(id) {
@@ -193,6 +197,12 @@ function editTx(id) {
 
 function deleteTx(id) {
   if (!confirm('Supprimer cette transaction ?')) return;
-  DB.set('transactions', (DB.get('transactions') || []).filter(t => t.id !== id));
+  const txs = DB.get('transactions') || [];
+  const tx = txs.find(t => t.id === id);
+  DB.set('transactions', txs.filter(t => t.id !== id));
   renderTransactionsTable();
+  // Also refresh shared budgets if this transaction was for a group
+  if (tx && tx.dest && tx.dest.startsWith('group-') && typeof renderShared === 'function') {
+    renderShared();
+  }
 }

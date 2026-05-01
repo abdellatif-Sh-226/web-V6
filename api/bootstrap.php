@@ -81,9 +81,16 @@ function mapBudgetRow(array $row) {
 }
 
 function mapTransactionRow(array $row) {
-    $dest = $row['destination_type'];
-    if ($row['destination_id']) {
-        $dest .= '-' . $row['destination_id'];
+    $dest = 'wallet'; // Default destination
+    if (!empty($row['destination_type'])) {
+        $dest = $row['destination_type'];
+        if (!empty($row['destination_id'])) {
+            $dest .= '-' . $row['destination_id'];
+        }
+    } elseif (!empty($row['destination_id'])) {
+        // Fallback: if we have an ID but no type, try to infer the type from ID format
+        // If the ID looks like it's from shared_budgets, default to 'group'
+        $dest = 'group-' . $row['destination_id'];
     }
     return [
         'id' => $row['id'],
