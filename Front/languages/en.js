@@ -1,5 +1,5 @@
 const LANG_EN = {
-  appName: 'BudgetCollab',
+  appName: 'Monexa',
   login: 'Sign in',
   email: 'Email',
   password: 'Password',
