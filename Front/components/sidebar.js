@@ -4,24 +4,24 @@ function buildSidebar() {
   const isAdmin = cu.role === 'admin';
   const navItems = isAdmin
     ? [
-        { icon: '\uD83D\uDCCA', label: t('dashboard'), page: 'dashboard' },
-        { icon: '\uD83D\uDCB8', label: t('transactions'), page: 'transactions' },
-        { icon: '\uD83D\uDCCB', label: t('budgets'), page: 'budgets' },
-        { icon: '\uD83C\uDFF7\uFE0F', label: t('categories'), page: 'categories' },
-        { icon: '\uD83D\uDC65', label: t('sharedBudgets'), page: 'shared' },
-        { icon: '\uD83D\uDD14', label: t('notifications'), page: 'notifications' },
-        { icon: '\u2699\uFE0F', label: t('administration'), page: 'admin' },
-        { icon: '\uD83D\uDD27', label: t('settings'), page: 'settings' }
-      ]
+      { icon: '\uD83D\uDCCA', label: t('dashboard'), page: 'dashboard' },
+      { icon: '\uD83D\uDCB8', label: t('transactions'), page: 'transactions' },
+      { icon: '\uD83D\uDCCB', label: t('budgets'), page: 'budgets' },
+      { icon: '\uD83C\uDFF7\uFE0F', label: t('categories'), page: 'categories' },
+      { icon: '\uD83D\uDC65', label: t('sharedBudgets'), page: 'shared' },
+      { icon: '\uD83D\uDD14', label: t('notifications'), page: 'notifications' },
+      { icon: '\u2699\uFE0F', label: t('administration'), page: 'admin' },
+      { icon: '\uD83D\uDD27', label: t('settings'), page: 'settings' }
+    ]
     : [
-        { icon: '\uD83D\uDCCA', label: t('dashboard'), page: 'dashboard' },
-        { icon: '\uD83D\uDCB8', label: t('myTransactions'), page: 'transactions' },
-        { icon: '\uD83D\uDCCB', label: t('myBudgets'), page: 'budgets' },
-        { icon: '\uD83C\uDFF7\uFE0F', label: t('myCategories'), page: 'categories' },
-        { icon: '\uD83D\uDC65', label: t('sharedBudgets'), page: 'shared' },
-        { icon: '\uD83D\uDD14', label: t('notifications'), page: 'notifications' },
-        { icon: '\uD83D\uDD27', label: t('settings'), page: 'settings' }
-      ];
+      { icon: '\uD83D\uDCCA', label: t('dashboard'), page: 'dashboard' },
+      { icon: '\uD83D\uDCB8', label: t('myTransactions'), page: 'transactions' },
+      { icon: '\uD83D\uDCCB', label: t('myBudgets'), page: 'budgets' },
+      { icon: '\uD83C\uDFF7\uFE0F', label: t('myCategories'), page: 'categories' },
+      { icon: '\uD83D\uDC65', label: t('sharedBudgets'), page: 'shared' },
+      { icon: '\uD83D\uDD14', label: t('notifications'), page: 'notifications' },
+      { icon: '\uD83D\uDD27', label: t('settings'), page: 'settings' }
+    ];
 
   return `
     <div class="sidebar-logo">\uD83D\uDCB0 ${t('appName')}</div>
@@ -30,8 +30,8 @@ function buildSidebar() {
       <div class="sidebar-user-info">
         <div class="sidebar-user-name" id="sidebarName">${cu.name}</div>
         <div id="sidebarRoleBadge">${isAdmin
-          ? '<span class="role-badge-admin">' + t('adminLabel') + '</span>'
-          : '<span class="role-badge-user">' + t('userLabel') + '</span>'}</div>
+      ? '<span class="role-badge-admin">' + t('adminLabel') + '</span>'
+      : '<span class="role-badge-user">' + t('userLabel') + '</span>'}</div>
       </div>
       <div class="notif-bell-sidebar" id="notifBellSidebar" onclick="event.stopPropagation();showPage('notifications')" style="position:relative;margin-left:auto;font-size:18px;padding:4px 8px;border-radius:6px;transition:background 0.2s">
         \uD83D\uDD14
