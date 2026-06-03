@@ -10,7 +10,7 @@ function renderCategories() {
       <td><span class="badge" style="background:rgba(255,255,255,0.08);color:var(--text-muted)">${count} transaction${count > 1 ? 's' : ''}</span></td>
       <td><div class="actions"><button class="icon-btn del" onclick="deleteCat('${c.id}')">\uD83D\uDDD1\uFE0F</button></div></td>
     </tr>`;
-  }).join('') : '<tr><td colspan="4" class="empty-state">Aucune cat\u00E9gorie</td></tr>';
+  }).join('') : '<tr><td colspan="4" class="empty-state">' + t('noCategory') + '</td></tr>';
 }
 
 function openCatModal(groupId) {
@@ -36,7 +36,7 @@ function saveCat() {
 }
 
 function deleteCat(id) {
-  if (!confirm('Supprimer cette cat\u00E9gorie ?')) return;
+  if (!confirm(t('confirmDeleteCategory'))) return;
   DB.set('categories', getCats().filter(c => c.id !== id));
   renderCategories();
 }

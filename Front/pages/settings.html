@@ -1,0 +1,73 @@
+<div class="page-header">
+  <div>
+    <div class="page-title" data-i18n="settings">&#128295; Param&#232;tres</div>
+    <div class="page-subtitle" data-i18n="settingsDesc">Personnalisez votre exp&#233;rience</div>
+  </div>
+</div>
+
+<div class="settings-grid">
+
+  <div class="section">
+    <div class="section-title" style="margin-bottom:20px" data-i18n="profile">&#128100; Profil</div>
+    <div class="form-group"><label data-i18n="fullName">Nom complet</label><input type="text" id="settingsName"></div>
+    <div class="form-group"><label data-i18n="email">Email</label><input type="email" id="settingsEmail"></div>
+    <button class="btn btn-sm" onclick="saveSettingsProfile()" data-i18n="save">Enregistrer</button>
+    <div id="settingsProfileMsg" class="auth-err" style="margin-top:8px"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title" style="margin-bottom:20px" data-i18n="language">&#127760; Langue</div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px" data-i18n="languageDesc">Changer la langue de l&#8217;interface</div>
+    <div style="display:flex;gap:12px">
+      <label class="radio-card" id="langFrCard">
+        <input type="radio" name="lang" value="fr" onchange="changeLanguage('fr')">
+        <span class="radio-card-label">&#127467;&#127479; Fran&#231;ais</span>
+      </label>
+      <label class="radio-card" id="langEnCard">
+        <input type="radio" name="lang" value="en" onchange="changeLanguage('en')">
+        <span class="radio-card-label">&#127468;&#127463; English</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title" style="margin-bottom:20px" data-i18n="currency">&#128176; Devise</div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px" data-i18n="currencyDesc">Changer la devise d&#8217;affichage</div>
+    <select id="settingsCurrency" onchange="changeCurrency(this.value)" class="filter-select" style="width:200px">
+      <option value="TND">TND - Dinar tunisien</option>
+      <option value="EUR">EUR - Euro</option>
+      <option value="USD">USD - Dollar</option>
+    </select>
+    <div style="margin-top:12px;font-size:14px;color:var(--text-muted)">
+      <span data-i18n="currencyPreview">Aper&#231;u:</span> <strong style="color:var(--text)" id="currencyPreview">1 234,56 TND</strong>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title" style="margin-bottom:20px" data-i18n="notifications">&#128276; Notifications</div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px" data-i18n="autoRefreshDesc">Mettre &#224; jour les donn&#233;es automatiquement toutes les 5 secondes</div>
+    <label class="toggle-row">
+      <span data-i18n="autoRefresh">Actualisation automatique</span>
+      <input type="checkbox" id="settingsAutoRefresh" onchange="toggleAutoRefresh(this.checked)">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+
+  <div class="section">
+    <div class="section-title" style="margin-bottom:20px" data-i18n="changePassword">&#128273; Mot de passe</div>
+    <div class="form-group"><label data-i18n="currentPassword">Mot de passe actuel</label><input type="password" id="settingsOldPwd"></div>
+    <div class="form-group"><label data-i18n="newPassword">Nouveau mot de passe</label><input type="password" id="settingsNewPwd"></div>
+    <div class="form-group"><label data-i18n="confirmPassword">Confirmer le mot de passe</label><input type="password" id="settingsConfirmPwd"></div>
+    <button class="btn btn-sm" onclick="changeSettingsPassword()" data-i18n="changePassword">Changer le mot de passe</button>
+    <div id="settingsPwdMsg" class="auth-err" style="margin-top:8px"></div>
+  </div>
+
+  <div class="section danger-zone">
+    <div class="section-title" style="color:var(--danger);margin-bottom:16px" data-i18n="dangerZone">&#9888;&#65039; Zone dangereuse</div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:20px" data-i18n="deleteAccountDesc">
+      Soumettre une demande de suppression de votre compte. Un administrateur devra l&#8217;approuver.
+    </div>
+    <button class="btn btn-danger btn-sm" onclick="requestDeleteAccount()" data-i18n="deleteAccount">Demander la suppression du compte</button>
+  </div>
+
+</div>

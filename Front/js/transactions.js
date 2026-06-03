@@ -5,7 +5,7 @@ function openTxModal(id) {
 
   const budgets = (DB.get('budgets') || []).filter(b => STATE.CU.role === 'admin' || b.userId === STATE.CU.id);
   const shared = (DB.get('sharedBudgets') || []).filter(s => s.members.includes(STATE.CU.id));
-  let destHTML = '<option value="wallet">\uD83D\uDCF1 Mon portefeuille</option>';
+  let destHTML = '<option value="wallet">\uD83D\uDCF1 ' + t('wallet') + '</option>';
   destHTML += budgets.map(b => `<option value="budget-${b.id}">\uD83C\uDFAF ${b.name}</option>`).join('');
   destHTML += shared.map(s => `<option value="group-${s.id}">\uD83D\uDC65 ${s.name}</option>`).join('');
   document.getElementById('txDest').innerHTML = destHTML;
@@ -13,7 +13,7 @@ function openTxModal(id) {
   if (id) {
     const tx = (DB.get('transactions') || []).find(t => t.id === id);
     if (!tx) return;
-    document.getElementById('txModalTitle').textContent = 'Modifier la transaction';
+    document.getElementById('txModalTitle').textContent = t('editTx');
     document.getElementById('txType').value = tx.type;
     document.getElementById('txDesc').value = tx.desc;
     document.getElementById('txAmount').value = tx.amount;
@@ -22,7 +22,7 @@ function openTxModal(id) {
     updateTxCategoryOptions(tx.dest || 'wallet', tx.catId);
     document.getElementById('txNotes').value = tx.notes || '';
   } else {
-    document.getElementById('txModalTitle').textContent = 'Ajouter une transaction';
+    document.getElementById('txModalTitle').textContent = t('newTx');
     document.getElementById('txType').value = 'expense';
     document.getElementById('txDesc').value = '';
     document.getElementById('txAmount').value = '';
@@ -84,7 +84,7 @@ function editTx(id) {
 }
 
 function deleteTx(id) {
-  if (!confirm('Supprimer cette transaction ?')) return;
+  if (!confirm(t('confirmDelete'))) return;
   apiFetch(`delete_transaction.php?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
     .then(() => {
       const txs = DB.get('transactions') || [];
@@ -97,6 +97,6 @@ function deleteTx(id) {
     })
     .catch(error => {
       console.error('Failed to delete transaction:', error);
-      alert('Erreur lors de la suppression de la transaction');
+      alert(t('deleteError'));
     });
 }

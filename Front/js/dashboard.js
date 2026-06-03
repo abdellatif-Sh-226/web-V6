@@ -5,8 +5,8 @@ function renderDashboard() {
   const roleInfo = document.getElementById('dashRoleInfo');
   if (roleInfo) {
     roleInfo.innerHTML = STATE.CU.role === 'admin'
-      ? '<span class="role-badge-admin">\uD83D\uDC51 Admin \u2014 vue globale</span>'
-      : '<span class="role-badge-user">\uD83D\uDC64 Vos donn\u00E9es uniquement</span>';
+      ? '<span class="role-badge-admin">\uD83D\uDC51 ' + t('adminView') + '</span>'
+      : '<span class="role-badge-user">\uD83D\uDC64 ' + t('yourDataOnly') + '</span>';
   }
 
   const userHeader = document.getElementById('dashUserHeader');
@@ -19,10 +19,10 @@ function renderDashboard() {
   const savingRate = income > 0 ? ((balance / income) * 100).toFixed(0) : 0;
 
   document.getElementById('dashCards').innerHTML = `
-    <div class="card"><div class="card-label">Total revenus</div><div class="card-value success">${fmt(income)}</div></div>
-    <div class="card"><div class="card-label">Total d\u00E9penses</div><div class="card-value danger">${fmt(expense)}</div></div>
-    <div class="card"><div class="card-label">Solde</div><div class="card-value ${balance >= 0 ? 'success' : 'danger'}">${fmt(balance)}</div></div>
-    <div class="card"><div class="card-label">Taux d'\u00E9pargne</div><div class="card-value ${savingRate >= 20 ? 'success' : savingRate >= 0 ? 'warning' : 'danger'}">${savingRate}%</div></div>
+    <div class="card"><div class="card-label">${t('totalRevenue')}</div><div class="card-value success">${fmt(income)}</div></div>
+    <div class="card"><div class="card-label">${t('totalExpenses')}</div><div class="card-value danger">${fmt(expense)}</div></div>
+    <div class="card"><div class="card-label">${t('balance')}</div><div class="card-value ${balance >= 0 ? 'success' : 'danger'}">${fmt(balance)}</div></div>
+    <div class="card"><div class="card-label">${t('savingRate')}</div><div class="card-value ${savingRate >= 20 ? 'success' : savingRate >= 0 ? 'warning' : 'danger'}">${savingRate}%</div></div>
   `;
 
   const myBudgets = (DB.get('budgets') || []).filter(b => b.userId === STATE.CU.id);
@@ -34,8 +34,8 @@ function renderDashboard() {
       .filter(t => t.type === 'expense' && t.dest === `budget-${b.id}` && (!b.catId || t.catId === b.catId))
       .reduce((s, t) => s + parseFloat(t.amount), 0);
     const pct = (spent / parseFloat(b.limit)) * 100;
-    if (pct >= 100) alerts += `<div class="alert alert-danger">\u26A0\uFE0F Budget "${b.name}" d\u00E9pass\u00E9 ! (${fmt(spent)} / ${fmt(b.limit)})</div>`;
-    else if (pct >= 80) alerts += `<div class="alert alert-warning">\u26A1 Budget "${b.name}" \u00E0 ${pct.toFixed(0)}% \u2014 proche de la limite</div>`;
+    if (pct >= 100) alerts += `<div class="alert alert-danger">\u26A0\uFE0F ${t('budgetOverspent')} "${b.name}" (${fmt(spent)} / ${fmt(b.limit)})</div>`;
+    else if (pct >= 80) alerts += `<div class="alert alert-warning">\u26A1 ${t('budgetNearLimit')} "${b.name}" ${pct.toFixed(0)}%</div>`;
   });
 
   document.getElementById('dashAlerts').innerHTML = alerts;
@@ -68,8 +68,8 @@ function renderDashboard() {
     data: {
       labels: months.map(m => m.label),
       datasets: [
-        { label: 'Revenus', data: iByM, borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.1)', tension: .4, fill: true },
-        { label: 'D\u00E9penses', data: eByM, borderColor: '#f87171', backgroundColor: 'rgba(248,113,113,0.1)', tension: .4, fill: true }
+        { label: t('revenue'), data: iByM, borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.1)', tension: .4, fill: true },
+        { label: t('expenses'), data: eByM, borderColor: '#f87171', backgroundColor: 'rgba(248,113,113,0.1)', tension: .4, fill: true }
       ]
     },
     options: {
@@ -90,5 +90,5 @@ function renderDashboard() {
       <td><span class="badge" style="background:${getCatColor(t.catId)}22;color:${getCatColor(t.catId)}">${getCatName(t.catId)}</span></td>
       ${STATE.CU.role === 'admin' ? `<td><span class="pill" style="font-size:12px">${getUserName(t.userId)}</span></td>` : ''}
       <td style="font-weight:600;color:${t.type === 'income' ? 'var(--success)' : 'var(--danger)'}">${t.type === 'income' ? '+' : '\u2212'}${fmt(t.amount)}</td>
-    </tr>`).join('') || '<tr><td colspan="5" class="empty-state">Aucune transaction</td></tr>';
+    </tr>`).join('') || '<tr><td colspan="5" class="empty-state">' + t('noTransaction') + '</td></tr>';
 }

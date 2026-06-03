@@ -2,9 +2,7 @@ function uid() {
   return 'id' + Date.now() + Math.random().toString(36).substr(2, 5);
 }
 
-function fmt(n) {
-  return parseFloat(n).toLocaleString('fr-TN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' TND';
-}
+// fmt is now in utils/i18n.js for currency-aware formatting
 
 function closeModal(id) {
   document.getElementById(id).classList.remove('open');

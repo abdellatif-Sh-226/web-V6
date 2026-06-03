@@ -13,13 +13,13 @@ function saveProfile() {
   const pwd = document.getElementById('profPwd').value;
   if (!name || !email) {
     document.getElementById('profMsg').className = 'auth-err err';
-    document.getElementById('profMsg').textContent = 'Nom et email requis.';
+    document.getElementById('profMsg').textContent = t('profileRequired');
     return;
   }
   DB.set('users', getUsers().map(u => u.id === STATE.CU.id ? { ...u, name, email, pwd: pwd || u.pwd } : u));
   STATE.CU = { ...STATE.CU, name, email, pwd: pwd || STATE.CU.pwd };
   updateSidebarUser();
   document.getElementById('profMsg').className = 'auth-err ok';
-  document.getElementById('profMsg').textContent = 'Profil mis \u00E0 jour !';
+  document.getElementById('profMsg').textContent = t('profileSaved');
   setTimeout(() => closeModal('profileModal'), 1000);
 }

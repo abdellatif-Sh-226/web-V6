@@ -1,44 +1,43 @@
 <div class="page-header">
   <div>
-    <div class="page-title">⚙️ Administration</div>
-    <div class="page-subtitle">Gestion complète du système</div>
+    <div class="page-title" data-i18n="administration">&#9889;&#65039; Administration</div>
+    <div class="page-subtitle" data-i18n="adminZoneDesc">Gestion compl&#232;te du syst&#232;me</div>
   </div>
 </div>
 <div class="admin-note">
-  👑 <strong>Zone Admin exclusive</strong> — Seuls les administrateurs ont accès à cette page.
-  Ici vous pouvez créer des comptes, gérer les rôles, et superviser tout le système.
+  &#128081; <strong data-i18n="adminZone">Zone Admin exclusive</strong> &#8212; <span data-i18n="adminZoneDesc">Seuls les administrateurs ont acc&#232;s &#224; cette page. Ici vous pouvez cr&#233;er des comptes, g&#233;rer les r&#244;les, et superviser tout le syst&#232;me.</span>
 </div>
 <div class="cards-grid" id="adminCards"></div>
 <div class="section admin-scope">
   <div class="section-header">
-    <span class="section-title">Gestion des utilisateurs</span>
-    <button class="btn btn-sm" onclick="document.getElementById('addUserModal').classList.add('open')">+ Créer un compte</button>
+    <span class="section-title" data-i18n="userManagement">Gestion des utilisateurs</span>
+    <button class="btn btn-sm" onclick="document.getElementById('addUserModal').classList.add('open')" data-i18n="addUser">+ Cr&#233;er un compte</button>
   </div>
   <table class="table">
     <thead><tr>
-      <th>Nom</th>
-      <th>Email</th>
-      <th>Rôle</th>
-      <th>Statut</th>
-      <th>Actions</th>
+      <th data-i18n="name">Nom</th>
+      <th data-i18n="email">Email</th>
+      <th data-i18n="role">R&#244;le</th>
+      <th data-i18n="status">Statut</th>
+      <th data-i18n="actions">Actions</th>
     </tr></thead>
     <tbody id="adminUsersBody"></tbody>
   </table>
 </div>
 <div class="section admin-scope">
-  <div class="section-header"><span class="section-title">Demandes de suppression de compte</span></div>
+  <div class="section-header"><span class="section-title" data-i18n="deleteRequestsTitle">Demandes de suppression de compte</span></div>
   <div id="deleteRequests"></div>
 </div>
 <div class="section admin-scope">
-  <div class="section-header"><span class="section-title">Vue globale — Toutes les transactions</span></div>
+  <div class="section-header"><span class="section-title" data-i18n="globalTransactions">Vue globale &#8212; Toutes les transactions</span></div>
   <table class="table">
     <thead><tr>
-      <th>Date</th>
-      <th>Utilisateur</th>
-      <th>Description</th>
-      <th>Catégorie</th>
-      <th>Type</th>
-      <th>Montant</th>
+      <th data-i18n="date">Date</th>
+      <th data-i18n="by">Utilisateur</th>
+      <th data-i18n="description">Description</th>
+      <th data-i18n="category">Cat&#233;gorie</th>
+      <th data-i18n="type">Type</th>
+      <th data-i18n="amount">Montant</th>
     </tr></thead>
     <tbody id="adminTxBody"></tbody>
   </table>

@@ -4,30 +4,32 @@ function buildSidebar() {
   const isAdmin = cu.role === 'admin';
   const navItems = isAdmin
     ? [
-        { icon: '\uD83D\uDCCA', label: 'Tableau de bord', page: 'dashboard' },
-        { icon: '\uD83D\uDCB8', label: 'Transactions', page: 'transactions' },
-        { icon: '\uD83D\uDCCB', label: 'Budgets', page: 'budgets' },
-        { icon: '\uD83C\uDFF7\uFE0F', label: 'Cat\u00E9gories', page: 'categories' },
-        { icon: '\uD83D\uDC65', label: 'Budgets partag\u00E9s', page: 'shared' },
-        { icon: '\u2699\uFE0F', label: 'Administration', page: 'admin' }
+        { icon: '\uD83D\uDCCA', label: t('dashboard'), page: 'dashboard' },
+        { icon: '\uD83D\uDCB8', label: t('transactions'), page: 'transactions' },
+        { icon: '\uD83D\uDCCB', label: t('budgets'), page: 'budgets' },
+        { icon: '\uD83C\uDFF7\uFE0F', label: t('categories'), page: 'categories' },
+        { icon: '\uD83D\uDC65', label: t('sharedBudgets'), page: 'shared' },
+        { icon: '\u2699\uFE0F', label: t('administration'), page: 'admin' },
+        { icon: '\uD83D\uDD27', label: t('settings'), page: 'settings' }
       ]
     : [
-        { icon: '\uD83D\uDCCA', label: 'Tableau de bord', page: 'dashboard' },
-        { icon: '\uD83D\uDCB8', label: 'Mes transactions', page: 'transactions' },
-        { icon: '\uD83D\uDCCB', label: 'Mes budgets', page: 'budgets' },
-        { icon: '\uD83C\uDFF7\uFE0F', label: 'Mes cat\u00E9gories', page: 'categories' },
-        { icon: '\uD83D\uDC65', label: 'Budgets partag\u00E9s', page: 'shared' }
+        { icon: '\uD83D\uDCCA', label: t('dashboard'), page: 'dashboard' },
+        { icon: '\uD83D\uDCB8', label: t('myTransactions'), page: 'transactions' },
+        { icon: '\uD83D\uDCCB', label: t('myBudgets'), page: 'budgets' },
+        { icon: '\uD83C\uDFF7\uFE0F', label: t('myCategories'), page: 'categories' },
+        { icon: '\uD83D\uDC65', label: t('sharedBudgets'), page: 'shared' },
+        { icon: '\uD83D\uDD27', label: t('settings'), page: 'settings' }
       ];
 
   return `
-    <div class="sidebar-logo">\uD83D\uDCB0 BudgetCollab</div>
+    <div class="sidebar-logo">\uD83D\uDCB0 ${t('appName')}</div>
     <div class="sidebar-user">
       <div class="avatar" id="sidebarAvatar">${cu.name.charAt(0).toUpperCase()}</div>
       <div class="sidebar-user-info">
         <div class="sidebar-user-name" id="sidebarName">${cu.name}</div>
         <div id="sidebarRoleBadge">${isAdmin
-          ? '<span class="role-badge-admin">\uD83D\uDC51 Admin</span>'
-          : '<span class="role-badge-user">\uD83D\uDC64 Utilisateur</span>'}</div>
+          ? '<span class="role-badge-admin">' + t('adminLabel') + '</span>'
+          : '<span class="role-badge-user">' + t('userLabel') + '</span>'}</div>
       </div>
     </div>
     <nav class="nav" id="sidebarNav">
@@ -39,7 +41,7 @@ function buildSidebar() {
     </nav>
     <div class="sidebar-bottom">
       <div class="nav-item" onclick="doLogout()">
-        <span class="nav-icon">\uD83D\uDEAA</span>D\u00E9connexion
+        <span class="nav-icon">\uD83D\uDEAA</span>${t('logout')}
       </div>
     </div>`;
 }
@@ -54,7 +56,7 @@ function updateSidebarUser() {
   if (name) name.textContent = cu.name;
   if (badge) {
     badge.innerHTML = cu.role === 'admin'
-      ? '<span class="role-badge-admin">\uD83D\uDC51 Admin</span>'
-      : '<span class="role-badge-user">\uD83D\uDC64 Utilisateur</span>';
+      ? '<span class="role-badge-admin">' + t('adminLabel') + '</span>'
+      : '<span class="role-badge-user">' + t('userLabel') + '</span>';
   }
 }

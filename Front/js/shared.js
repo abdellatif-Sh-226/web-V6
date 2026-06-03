@@ -17,7 +17,7 @@ function renderShared() {
         <div>
           <div class="section-title">\uD83D\uDC65 ${s.name}</div>
           <div style="font-size:13px;color:var(--text-muted);margin-top:4px">${s.desc}</div>
-          ${s.locked ? `<div style="font-size:12px;color:var(--warning);margin-top:6px">\uD83D\uDD12 Groupe verrouill\u00E9 \u2014 seuls le cr\u00E9ateur et l'admin peuvent modifier</div>` : ''}
+          ${s.locked ? `<div style="font-size:12px;color:var(--warning);margin-top:6px">\uD83D\uDD12 ${t('groupLocked')}</div>` : ''}
         </div>
         <div style="display:flex;gap:8px;align-items:center">
           ${(isOwner || STATE.CU.role === 'admin') ? `<button class="icon-btn" onclick="openSharedModal('${s.id}')">\u270F\uFE0F</button>` : ''}
@@ -29,19 +29,19 @@ function renderShared() {
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px">
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          ${getGroupCats(s.id).map(c => `<span class="pill" style="background:${c.color}22;color:${c.color}">${c.name}</span>`).join('') || '<span style="color:var(--text-muted);font-size:13px">Aucune cat\u00E9gorie groupe</span>'}
+          ${getGroupCats(s.id).map(c => `<span class="pill" style="background:${c.color}22;color:${c.color}">${c.name}</span>`).join('') || '<span style="color:var(--text-muted);font-size:13px">' + t('noGroupCats') + '</span>'}
         </div>
-        ${(isOwner || STATE.CU.role === 'admin') ? `<button class="btn btn-sm btn-secondary" onclick="openCatModal('${s.id}')">+ Cat\u00E9gorie groupe</button>` : ''}
+        ${(isOwner || STATE.CU.role === 'admin') ? `<button class="btn btn-sm btn-secondary" onclick="openCatModal('${s.id}')">+ ${t('category')}</button>` : ''}
       </div>
       <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px">
-        <span style="color:var(--text-muted)">D\u00E9pens\u00E9 ensemble: <strong style="color:${color}">${fmt(spent)}</strong></span>
-        <span style="color:var(--text-muted)">Plafond: <strong>${fmt(s.limit || 0)}</strong></span>
+        <span style="color:var(--text-muted)">${t('spentTogether')}: <strong style="color:${color}">${fmt(spent)}</strong></span>
+        <span style="color:var(--text-muted)">${t('limit')}: <strong>${fmt(s.limit || 0)}</strong></span>
       </div>
       <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
-      ${recentTxs.length ? `<div style="margin-top:16px;font-size:12px;color:var(--text-muted);margin-bottom:8px">Transactions du groupe :</div>
+      ${recentTxs.length ? `<div style="margin-top:16px;font-size:12px;color:var(--text-muted);margin-bottom:8px">${t('groupTransactions')}</div>
       ${recentTxs.map(t => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span>${getUserName(t.userId)} \u00B7 ${t.desc}</span><span style="color:${t.type === 'income' ? 'var(--success)' : 'var(--danger)'}">${t.type === 'income' ? '+' : '\u2212'}${fmt(t.amount)}</span></div>`).join('')}` : ''}
     </div>`;
-  }).join('') : '<div class="section"><div class="empty-state">Aucun budget partag\u00E9</div></div>';
+  }).join('') : '<div class="section"><div class="empty-state">' + t('noSharedBudget') + '</div></div>';
 }
 
 function openSharedModal(id) {
@@ -51,13 +51,13 @@ function openSharedModal(id) {
     const shared = (DB.get('sharedBudgets') || []).find(s => s.id === id);
     if (!shared) return;
     if (shared.ownerId !== STATE.CU.id && STATE.CU.role !== 'admin') return;
-    titleEl.textContent = 'Modifier le budget partag\u00E9';
+    titleEl.textContent = t('editShared');
     document.getElementById('sharedName').value = shared.name;
     document.getElementById('sharedDesc').value = shared.desc;
     document.getElementById('sharedLimit').value = shared.limit;
     STATE.sharedMembers = [...shared.members];
   } else {
-    titleEl.textContent = 'Cr\u00E9er un budget partag\u00E9';
+    titleEl.textContent = t('newShared');
     document.getElementById('sharedName').value = '';
     document.getElementById('sharedDesc').value = '';
     document.getElementById('sharedLimit').value = '';
@@ -71,8 +71,8 @@ function openSharedModal(id) {
 function addSharedMember() {
   const email = document.getElementById('sharedMemberEmail').value.trim();
   const u = getUsers().find(u => u.email === email);
-  if (!u) { alert('Utilisateur introuvable'); return; }
-  if (STATE.sharedMembers.includes(u.id)) { alert('D\u00E9j\u00E0 ajout\u00E9'); return; }
+  if (!u) { alert(t('memberNotFound')); return; }
+  if (STATE.sharedMembers.includes(u.id)) { alert(t('memberAlreadyAdded')); return; }
   STATE.sharedMembers.push(u.id);
   document.getElementById('sharedMemberEmail').value = '';
   renderSharedMembersUI();
@@ -108,7 +108,7 @@ function saveShared() {
 }
 
 function deleteShared(id) {
-  if (!confirm('Supprimer ce budget partag\u00E9 ?')) return;
+  if (!confirm(t('confirmDeleteShared'))) return;
   DB.set('sharedBudgets', (DB.get('sharedBudgets') || []).filter(s => s.id !== id));
   renderShared();
 }

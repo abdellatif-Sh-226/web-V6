@@ -1,34 +1,34 @@
 <div class="page-header">
   <div>
     <div class="page-title" id="txPageTitle">Mes transactions</div>
-    <div class="page-subtitle" id="txPageSub" style="display:none">Vous ne voyez que vos propres transactions</div>
+    <div class="page-subtitle" id="txPageSub" style="display:none" data-i18n="userTransactions">Vous ne voyez que vos propres transactions</div>
   </div>
-  <button class="btn btn-sm" onclick="openTxModal()">+ Ajouter</button>
+  <button class="btn btn-sm" onclick="openTxModal()" data-i18n="addTx">+ Ajouter</button>
 </div>
 <div class="section">
   <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
     <select id="txFilterType" onchange="renderTransactionsTable()" class="filter-select">
-      <option value="">Tous les types</option>
-      <option value="income">Revenus</option>
-      <option value="expense">Dépenses</option>
+      <option value="" data-i18n="filterAllTypes">Tous les types</option>
+      <option value="income" data-i18n="filterIncome">Revenus</option>
+      <option value="expense" data-i18n="filterExpense">D&#233;penses</option>
     </select>
     <select id="txFilterCat" onchange="renderTransactionsTable()" class="filter-select">
-      <option value="">Toutes catégories</option>
+      <option value="" data-i18n="filterAllCats">Toutes cat&#233;gories</option>
     </select>
     <select id="txFilterUser" onchange="renderTransactionsTable()" class="filter-select" style="display:none">
-      <option value="">Tous les utilisateurs</option>
+      <option value="" data-i18n="filterAllUsers">Tous les utilisateurs</option>
     </select>
   </div>
   <table class="table">
     <thead><tr>
-      <th>Date</th>
-      <th>Description</th>
-      <th>Catégorie</th>
-      <th>Type</th>
-      <th>Destination</th>
-      <th id="txUserHeader" style="display:none">Par</th>
-      <th>Montant</th>
-      <th>Actions</th>
+      <th data-i18n="date">Date</th>
+      <th data-i18n="description">Description</th>
+      <th data-i18n="category">Cat&#233;gorie</th>
+      <th data-i18n="type">Type</th>
+      <th data-i18n="destination">Destination</th>
+      <th id="txUserHeader" style="display:none" data-i18n="by">Par</th>
+      <th data-i18n="amount">Montant</th>
+      <th data-i18n="actions">Actions</th>
     </tr></thead>
     <tbody id="txBody"></tbody>
   </table>

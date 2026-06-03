@@ -14,27 +14,24 @@
 </head>
 <body>
 
-<!-- SAVE INDICATOR -->
-<div id="_saveInd" class="save-indicator">&#10003; Sauvegard&#233;</div>
+<div id="_saveInd" class="save-indicator" data-i18n="saved">&#10003; Sauvegard&#233;</div>
 
-<!-- LOGIN ONLY -->
 <div class="auth-wrap" id="authPage">
   <div class="auth-box">
     <div class="auth-logo">&#128176; BudgetCollab</div>
-    <div class="auth-sub">Connexion &#8212; Les comptes sont cr&#233;&#233;s par l'administrateur</div>
-    <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="vous@exemple.com"></div>
-    <div class="form-group"><label>Mot de passe</label><input type="password" id="loginPwd" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"></div>
-    <button class="btn" onclick="doLogin()">Se connecter</button>
+    <div class="auth-sub" data-i18n="loginSub">Connexion &#8212; Les comptes sont cr&#233;&#233;s par l'administrateur</div>
+    <div class="form-group"><label data-i18n="email">Email</label><input type="email" id="loginEmail" data-i18n-placeholder="true" data-i18n="emailPlaceholder" placeholder="vous@exemple.com"></div>
+    <div class="form-group"><label data-i18n="password">Mot de passe</label><input type="password" id="loginPwd" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"></div>
+    <button class="btn" onclick="doLogin()" data-i18n="login">Se connecter</button>
     <div class="auth-err err" id="authErr"></div>
     <div class="demo-accounts">
-      <div class="demo-title">Comptes de d&#233;monstration :</div>
-      <div>&#128081; Admin : <strong>admin@demo.com</strong> / <strong>admin123</strong></div>
-      <div>&#128100; User : <strong>sara@demo.com</strong> / <strong>sara123</strong></div>
+      <div class="demo-title" data-i18n="demoAccounts">Comptes de d&#233;monstration :</div>
+      <div><span data-i18n="demoAdmin">&#128081; Admin :</span> <strong>admin@demo.com</strong> / <strong>admin123</strong></div>
+      <div><span data-i18n="demoUser">&#128100; User :</span> <strong>sara@demo.com</strong> / <strong>sara123</strong></div>
     </div>
   </div>
 </div>
 
-<!-- APP -->
 <div class="app" id="mainApp" style="display:none">
   <div class="sidebar" id="sidebarPlaceholder"></div>
   <main class="main" id="mainContent"></main>
@@ -42,111 +39,106 @@
 
 <!-- MODALS -->
 
-<!-- Transaction Modal -->
 <div class="modal-overlay" id="txModal">
   <div class="modal">
-    <div class="modal-title" id="txModalTitle">Ajouter une transaction</div>
-    <div class="form-group"><label>Type</label><select id="txType"><option value="income">Revenu</option><option value="expense">D&#233;pense</option></select></div>
-    <div class="form-group"><label>Description</label><input type="text" id="txDesc" placeholder="Ex: Loyer, Salaire..."></div>
-    <div class="form-group"><label>Montant (TND)</label><input type="number" id="txAmount" placeholder="0.00" min="0" step="0.01"></div>
-    <div class="form-group"><label>Date</label><input type="date" id="txDate"></div>
-    <div class="form-group"><label>Destination</label><select id="txDest" onchange="syncTxTypeToDestination()"><option value="wallet">&#128241; Mon portefeuille</option></select></div>
-    <div class="form-group"><label>Cat&#233;gorie</label><select id="txCat"></select></div>
-    <div class="form-group"><label>Notes (optionnel)</label><textarea id="txNotes" rows="2" placeholder="..."></textarea></div>
+    <div class="modal-title" id="txModalTitle" data-i18n="newTx">Ajouter une transaction</div>
+    <div class="form-group"><label data-i18n="type">Type</label><select id="txType"><option value="income" data-i18n="incomeLabel">Revenu</option><option value="expense" data-i18n="expenseLabel">D&#233;pense</option></select></div>
+    <div class="form-group"><label data-i18n="txDesc">Description</label><input type="text" id="txDesc" placeholder="Ex: Loyer, Salaire..."></div>
+    <div class="form-group"><label data-i18n="txAmount">Montant (TND)</label><input type="number" id="txAmount" placeholder="0.00" min="0" step="0.01"></div>
+    <div class="form-group"><label data-i18n="txDate">Date</label><input type="date" id="txDate"></div>
+    <div class="form-group"><label data-i18n="txDest">Destination</label><select id="txDest" onchange="syncTxTypeToDestination()"><option value="wallet" data-i18n="wallet">&#128241; Mon portefeuille</option></select></div>
+    <div class="form-group"><label data-i18n="txCat">Cat&#233;gorie</label><select id="txCat"></select></div>
+    <div class="form-group"><label data-i18n="txNotes">Notes (optionnel)</label><textarea id="txNotes" rows="2" placeholder="..."></textarea></div>
     <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('txModal')">Annuler</button>
-      <button class="btn" onclick="saveTx()">Enregistrer</button>
+      <button class="btn btn-secondary" onclick="closeModal('txModal')" data-i18n="cancel">Annuler</button>
+      <button class="btn" onclick="saveTx()" data-i18n="save">Enregistrer</button>
     </div>
   </div>
 </div>
 
-<!-- Budget Modal -->
 <div class="modal-overlay" id="budgetModal">
   <div class="modal">
-    <div class="modal-title">Cr&#233;er un budget</div>
-    <div class="form-group"><label>Nom du budget</label><input type="text" id="budgetName" placeholder="Budget mensuel..."></div>
-    <div class="form-group"><label>P&#233;riode</label><select id="budgetPeriod"><option value="monthly">Mensuel</option><option value="weekly">Hebdomadaire</option><option value="custom">Personnalis&#233;</option></select></div>
-    <div class="form-group"><label>Plafond global (TND)</label><input type="number" id="budgetLimit" placeholder="1000" min="0"></div>
-    <div class="form-group"><label>Cat&#233;gorie (optionnel)</label><select id="budgetCat"><option value="">Toutes les cat&#233;gories</option></select></div>
-    <div class="form-group"><label>Date de d&#233;but</label><input type="date" id="budgetStart"></div>
-    <div class="form-group"><label>Date de fin</label><input type="date" id="budgetEnd"></div>
-    <div id="budgetUserRow" class="form-group" style="display:none"><label>Assigner &#224; (Admin seulement)</label><select id="budgetUser"></select></div>
+    <div class="modal-title" data-i18n="newBudget">Cr&#233;er un budget</div>
+    <div class="form-group"><label data-i18n="budgetName">Nom du budget</label><input type="text" id="budgetName" placeholder="Budget mensuel..."></div>
+    <div class="form-group"><label data-i18n="budgetPeriod">P&#233;riode</label><select id="budgetPeriod"><option value="monthly" data-i18n="monthly">Mensuel</option><option value="weekly" data-i18n="weekly">Hebdomadaire</option><option value="custom" data-i18n="custom">Personnalis&#233;</option></select></div>
+    <div class="form-group"><label data-i18n="globalLimit">Plafond global (TND)</label><input type="number" id="budgetLimit" placeholder="1000" min="0"></div>
+    <div class="form-group"><label data-i18n="categoryOptional">Cat&#233;gorie (optionnel)</label><select id="budgetCat"><option value="" data-i18n="filterAllCats">Toutes les cat&#233;gories</option></select></div>
+    <div class="form-group"><label data-i18n="startDate">Date de d&#233;but</label><input type="date" id="budgetStart"></div>
+    <div class="form-group"><label data-i18n="endDate">Date de fin</label><input type="date" id="budgetEnd"></div>
+    <div id="budgetUserRow" class="form-group" style="display:none"><label data-i18n="assignTo">Assigner &#224; (Admin seulement)</label><select id="budgetUser"></select></div>
     <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('budgetModal')">Annuler</button>
-      <button class="btn" onclick="saveBudget()">Cr&#233;er</button>
+      <button class="btn btn-secondary" onclick="closeModal('budgetModal')" data-i18n="cancel">Annuler</button>
+      <button class="btn" onclick="saveBudget()" data-i18n="create">Cr&#233;er</button>
     </div>
   </div>
 </div>
 
-<!-- Category Modal -->
 <div class="modal-overlay" id="catModal">
   <div class="modal">
-    <div class="modal-title">Ajouter une cat&#233;gorie</div>
-    <div class="form-group"><label>Nom</label><input type="text" id="catName" placeholder="Ex: Loisirs..."></div>
-    <div class="form-group"><label>Couleur</label><input type="color" id="catColor" value="#e94560" class="color-input"></div>
+    <div class="modal-title" data-i18n="newCategory">Ajouter une cat&#233;gorie</div>
+    <div class="form-group"><label data-i18n="catName">Nom</label><input type="text" id="catName" placeholder="Ex: Loisirs..."></div>
+    <div class="form-group"><label data-i18n="catColor">Couleur</label><input type="color" id="catColor" value="#e94560" class="color-input"></div>
     <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('catModal')">Annuler</button>
-      <button class="btn" onclick="saveCat()">Ajouter</button>
+      <button class="btn btn-secondary" onclick="closeModal('catModal')" data-i18n="cancel">Annuler</button>
+      <button class="btn" onclick="saveCat()" data-i18n="add">Ajouter</button>
     </div>
   </div>
 </div>
 
-<!-- Shared Budget Modal -->
 <div class="modal-overlay" id="sharedModal">
   <div class="modal">
-    <div class="modal-title">Cr&#233;er un budget partag&#233;</div>
-    <div class="form-group"><label>Nom du groupe</label><input type="text" id="sharedName" placeholder="Ex: Colocation Tunis..."></div>
-    <div class="form-group"><label>Description</label><input type="text" id="sharedDesc" placeholder="Budget commun pour..."></div>
-    <div class="form-group"><label>Plafond (TND)</label><input type="number" id="sharedLimit" placeholder="2000"></div>
-    <div class="form-group"><label>Ajouter membre (email)</label>
-      <div class="shared-member-row"><input type="email" id="sharedMemberEmail" placeholder="membre@email.com"><button class="btn btn-secondary btn-sm" onclick="addSharedMember()">+</button></div>
+    <div class="modal-title" data-i18n="newShared">Cr&#233;er un budget partag&#233;</div>
+    <div class="form-group"><label data-i18n="groupName">Nom du groupe</label><input type="text" id="sharedName" placeholder="Ex: Colocation Tunis..."></div>
+    <div class="form-group"><label data-i18n="groupDesc">Description</label><input type="text" id="sharedDesc" placeholder="Budget commun pour..."></div>
+    <div class="form-group"><label data-i18n="groupLimit">Plafond (TND)</label><input type="number" id="sharedLimit" placeholder="2000"></div>
+    <div class="form-group"><label data-i18n="addMember">Ajouter membre (email)</label>
+      <div class="shared-member-row"><input type="email" id="sharedMemberEmail" data-i18n-placeholder="true" data-i18n="memberPlaceholder" placeholder="membre@email.com"><button class="btn btn-secondary btn-sm" onclick="addSharedMember()">+</button></div>
     </div>
     <div id="sharedMembersList" class="shared-members-list"></div>
     <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('sharedModal')">Annuler</button>
-      <button class="btn" onclick="saveShared()">Cr&#233;er</button>
+      <button class="btn btn-secondary" onclick="closeModal('sharedModal')" data-i18n="cancel">Annuler</button>
+      <button class="btn" onclick="saveShared()" data-i18n="create">Cr&#233;er</button>
     </div>
   </div>
 </div>
 
-<!-- Add User Modal -->
 <div class="modal-overlay" id="addUserModal">
   <div class="modal">
-    <div class="modal-title">&#10133; Cr&#233;er un compte utilisateur</div>
-    <div class="admin-note">
+    <div class="modal-title" data-i18n="createAccount">&#10133; Cr&#233;er un compte utilisateur</div>
+    <div class="admin-note" data-i18n="createAccountDesc">
       Seul l'administrateur peut cr&#233;er des comptes. L'utilisateur recevra ses identifiants pour se connecter.
     </div>
-    <div class="form-group"><label>Nom complet</label><input type="text" id="newUserName" placeholder="Ahmed Ben Ali"></div>
-    <div class="form-group"><label>Email</label><input type="email" id="newUserEmail" placeholder="ahmed@exemple.com"></div>
-    <div class="form-group"><label>Mot de passe</label><input type="password" id="newUserPwd" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"></div>
-    <div class="form-group"><label>R&#244;le</label>
-      <select id="newUserRole"><option value="user">Utilisateur</option><option value="admin">Administrateur</option></select>
+    <div class="form-group"><label data-i18n="fullName">Nom complet</label><input type="text" id="newUserName" placeholder="Ahmed Ben Ali"></div>
+    <div class="form-group"><label data-i18n="email">Email</label><input type="email" id="newUserEmail" placeholder="ahmed@exemple.com"></div>
+    <div class="form-group"><label data-i18n="password">Mot de passe</label><input type="password" id="newUserPwd" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"></div>
+    <div class="form-group"><label data-i18n="role">R&#244;le</label>
+      <select id="newUserRole"><option value="user" data-i18n="userLabel">Utilisateur</option><option value="admin" data-i18n="adminLabel">Administrateur</option></select>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('addUserModal')">Annuler</button>
-      <button class="btn" onclick="saveNewUser()">Cr&#233;er le compte</button>
+      <button class="btn btn-secondary" onclick="closeModal('addUserModal')" data-i18n="cancel">Annuler</button>
+      <button class="btn" onclick="saveNewUser()" data-i18n="create">Cr&#233;er le compte</button>
     </div>
   </div>
 </div>
 
-<!-- Profile Modal -->
 <div class="modal-overlay" id="profileModal">
   <div class="modal">
-    <div class="modal-title">&#9998;&#65039; Modifier mon profil</div>
-    <div class="form-group"><label>Nom complet</label><input type="text" id="profName"></div>
-    <div class="form-group"><label>Email</label><input type="email" id="profEmail"></div>
-    <div class="form-group"><label>Nouveau mot de passe (laisser vide pour ne pas changer)</label><input type="password" id="profPwd" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"></div>
+    <div class="modal-title" data-i18n="editProfile">&#9998;&#65039; Modifier mon profil</div>
+    <div class="form-group"><label data-i18n="fullName">Nom complet</label><input type="text" id="profName"></div>
+    <div class="form-group"><label data-i18n="email">Email</label><input type="email" id="profEmail"></div>
+    <div class="form-group"><label data-i18n="newPwdPlaceholder">Nouveau mot de passe (laisser vide pour ne pas changer)</label><input type="password" id="profPwd" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"></div>
     <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('profileModal')">Annuler</button>
-      <button class="btn" onclick="saveProfile()">Enregistrer</button>
+      <button class="btn btn-secondary" onclick="closeModal('profileModal')" data-i18n="cancel">Annuler</button>
+      <button class="btn" onclick="saveProfile()" data-i18n="save">Enregistrer</button>
     </div>
     <div class="auth-err" id="profMsg"></div>
   </div>
 </div>
 
-<!-- SCRIPTS -->
 <script src="utils/helpers.js"></script>
 <script src="utils/db.js"></script>
+<script src="languages/fr.js"></script>
+<script src="languages/en.js"></script>
 <script src="utils/i18n.js"></script>
 
 <script src="js/state.js"></script>
@@ -165,6 +157,7 @@
 <script src="js/categories.js"></script>
 <script src="js/shared.js"></script>
 <script src="js/profile.js"></script>
+<script src="js/settings.js"></script>
 
 </body>
 </html>
