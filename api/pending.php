@@ -70,15 +70,15 @@ if ($method === 'POST') {
         foreach ($members as $member) {
             $notifId = 'nt' . uniqid() . bin2hex(random_bytes(4));
             $title = "Approbation requise";
-            $message = "$creator a ajout\u00E9 une d\u00E9pense de " . number_format($amount, 2, ',', ' ') . " TND (\u00AB $desc \u00BB) dans le budget partag\u00E9. Merci de l'approuver ou la refuser.";
+            $message = "$creator a ajouté une dépense de " . number_format($amount, 2, ',', ' ') . " TND (« $desc ») dans le budget partagé. Merci de l'approuver ou la refuser.";
             $notifStmt->execute([$notifId, $member['user_id'], 'pending_approval', $title, $message, $id]);
         }
 
         // Notify the creator that their request was submitted
         $notifId = 'nt' . uniqid() . bin2hex(random_bytes(4));
         $notifStmt->execute([$notifId, $currentUserId, 'info',
-            "Demande envoy\u00E9e",
-            "Votre d\u00E9pense \u00AB $desc \u00BB de " . number_format($amount, 2, ',', ' ') . " TND est en attente d'approbation par les membres du groupe.",
+            "Demande envoyée",
+            "Votre dépense « $desc » de " . number_format($amount, 2, ',', ' ') . " TND est en attente d'approbation par les membres du groupe.",
             $id
         ]);
 

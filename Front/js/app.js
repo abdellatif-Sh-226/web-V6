@@ -161,7 +161,11 @@ async function showPage(page) {
       renderShared();
     },
     admin: () => { renderAdmin(); },
-    settings: () => { renderSettings(); }
+    settings: () => { renderSettings(); },
+    notifications: () => {
+      renderNotificationsPage();
+      markNotifRead('all');
+    }
   };
 
   const renderFn = renderMap[page];
@@ -207,14 +211,14 @@ function renderAdmin() {
     </div>`).join('') : '<div style="color:var(--text-muted);font-size:14px">' + t('noDeleteRequests') + '</div>';
 
   const allTxsSorted = [...txs].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 10);
-  document.getElementById('adminTxBody').innerHTML = allTxsSorted.map(t => `
+  document.getElementById('adminTxBody').innerHTML = allTxsSorted.map(tx => `
     <tr>
-      <td class="text-muted">${new Date(t.date).toLocaleDateString('fr-TN')}</td>
-      <td><span class="pill" style="font-size:12px">${getUserName(t.userId)}</span></td>
-      <td>${t.desc}</td>
-      <td><span class="badge" style="background:${getCatColor(t.catId)}22;color:${getCatColor(t.catId)}">${getCatName(t.catId)}</span></td>
-      <td><span class="badge badge-${t.type}">${t.type === 'income' ? t('incomeLabel') : t('expenseLabel')}</span></td>
-      <td style="font-weight:600;color:${t.type === 'income' ? 'var(--success)' : 'var(--danger)'}">${t.type === 'income' ? '+' : '\u2212'}${fmt(t.amount)}</td>
+      <td class="text-muted">${new Date(tx.date).toLocaleDateString('fr-TN')}</td>
+      <td><span class="pill" style="font-size:12px">${getUserName(tx.userId)}</span></td>
+      <td>${tx.desc}</td>
+      <td><span class="badge" style="background:${getCatColor(tx.catId)}22;color:${getCatColor(tx.catId)}">${getCatName(tx.catId)}</span></td>
+      <td><span class="badge badge-${tx.type}">${tx.type === 'income' ? t('incomeLabel') : t('expenseLabel')}</span></td>
+      <td style="font-weight:600;color:${tx.type === 'income' ? 'var(--success)' : 'var(--danger)'}">${tx.type === 'income' ? '+' : '\u2212'}${fmt(tx.amount)}</td>
     </tr>`).join('');
 }
 

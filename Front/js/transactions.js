@@ -91,7 +91,7 @@ async function saveTx() {
       refreshNotifications();
       if (typeof renderShared === 'function') renderShared();
     } catch (e) {
-      alert(e.message || 'Erreur lors de la cr\u00E9ation de la demande');
+      alert(e.message || 'Erreur lors de la création de la demande');
     }
     return;
   }

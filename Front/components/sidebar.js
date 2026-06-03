@@ -9,6 +9,7 @@ function buildSidebar() {
         { icon: '\uD83D\uDCCB', label: t('budgets'), page: 'budgets' },
         { icon: '\uD83C\uDFF7\uFE0F', label: t('categories'), page: 'categories' },
         { icon: '\uD83D\uDC65', label: t('sharedBudgets'), page: 'shared' },
+        { icon: '\uD83D\uDD14', label: t('notifications'), page: 'notifications' },
         { icon: '\u2699\uFE0F', label: t('administration'), page: 'admin' },
         { icon: '\uD83D\uDD27', label: t('settings'), page: 'settings' }
       ]
@@ -18,18 +19,23 @@ function buildSidebar() {
         { icon: '\uD83D\uDCCB', label: t('myBudgets'), page: 'budgets' },
         { icon: '\uD83C\uDFF7\uFE0F', label: t('myCategories'), page: 'categories' },
         { icon: '\uD83D\uDC65', label: t('sharedBudgets'), page: 'shared' },
+        { icon: '\uD83D\uDD14', label: t('notifications'), page: 'notifications' },
         { icon: '\uD83D\uDD27', label: t('settings'), page: 'settings' }
       ];
 
   return `
     <div class="sidebar-logo">\uD83D\uDCB0 ${t('appName')}</div>
-    <div class="sidebar-user">
+    <div class="sidebar-user" style="cursor:pointer" onclick="showPage('notifications')">
       <div class="avatar" id="sidebarAvatar">${cu.name.charAt(0).toUpperCase()}</div>
       <div class="sidebar-user-info">
         <div class="sidebar-user-name" id="sidebarName">${cu.name}</div>
         <div id="sidebarRoleBadge">${isAdmin
           ? '<span class="role-badge-admin">' + t('adminLabel') + '</span>'
           : '<span class="role-badge-user">' + t('userLabel') + '</span>'}</div>
+      </div>
+      <div class="notif-bell-sidebar" id="notifBellSidebar" onclick="event.stopPropagation();showPage('notifications')" style="position:relative;margin-left:auto;font-size:18px;padding:4px 8px;border-radius:6px;transition:background 0.2s">
+        \uD83D\uDD14
+        <span class="notif-badge-sidebar" id="notifBadgeSide" style="display:none">0</span>
       </div>
     </div>
     <nav class="nav" id="sidebarNav">
@@ -40,7 +46,6 @@ function buildSidebar() {
       ).join('')}
     </nav>
     <div class="sidebar-bottom">
-      <div class="notif-bell-wrap">${buildNotificationBell()}</div>
       <div class="nav-item" onclick="doLogout()">
         <span class="nav-icon">\uD83D\uDEAA</span>${t('logout')}
       </div>

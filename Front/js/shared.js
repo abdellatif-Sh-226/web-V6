@@ -5,7 +5,9 @@ function renderShared() {
   const pending = DB.get('pendingTransactions') || [];
   const mine = STATE.CU.role === 'admin' ? all : all.filter(s => s.members.includes(STATE.CU.id));
 
-  document.getElementById('sharedList').innerHTML = mine.length ? mine.map(s => {
+  const sharedList = document.getElementById('sharedList');
+  if (!sharedList) return;
+  sharedList.innerHTML = mine.length ? mine.map(s => {
     const members = s.members.map(id => users.find(u => u.id === id)).filter(Boolean);
     const spent = txs.filter(t => s.members.includes(t.userId) && t.type === 'expense' && t.dest === `group-${s.id}`).reduce((sum, t) => sum + parseFloat(t.amount), 0);
     const pct = Math.min((spent / (s.limit || 1)) * 100, 100);

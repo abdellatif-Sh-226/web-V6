@@ -33,7 +33,9 @@ function renderTransactionsTable() {
   if (filterUser) txs = txs.filter(t => t.userId === filterUser);
 
   const colspan = isAdmin ? 8 : 7;
-  document.getElementById('txBody').innerHTML = txs.length
+  const txBody = document.getElementById('txBody');
+  if (!txBody) return;
+  txBody.innerHTML = txs.length
     ? txs.map(tx => `
     <tr>
       <td class="text-muted">${new Date(tx.date).toLocaleDateString('fr-TN')}</td>

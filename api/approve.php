@@ -62,11 +62,11 @@ try {
         $notifStmt = $pdo->prepare('INSERT INTO notifications (id, user_id, type, title, message, related_id) VALUES (?, ?, ?, ?, ?, ?)');
         foreach ($allMembers as $member) {
             $notifId = 'nt' . uniqid() . bin2hex(random_bytes(4));
-            $title = "D\u00E9pense refus\u00E9e";
+            $title = "Dépense refusée";
             if ($member['user_id'] === $pending['user_id']) {
-                $message = "$rejector a refus\u00E9 votre d\u00E9pense \u00AB {$pending['description']} \u00BB de " . number_format($pending['amount'], 2, ',', ' ') . " TND.";
+                $message = "$rejector a refusé votre dépense « {$pending['description']} » de " . number_format($pending['amount'], 2, ',', ' ') . " TND.";
             } else {
-                $message = "$rejector a refus\u00E9 la d\u00E9pense \u00AB {$pending['description']} \u00BB de " . number_format($pending['amount'], 2, ',', ' ') . " TND.";
+                $message = "$rejector a refusé la dépense « {$pending['description']} » de " . number_format($pending['amount'], 2, ',', ' ') . " TND.";
             }
             $notifStmt->execute([$notifId, $member['user_id'], 'rejected', $title, $message, $pendingId]);
         }
@@ -94,8 +94,8 @@ try {
             foreach ($members as $member) {
                 $notifId = 'nt' . uniqid() . bin2hex(random_bytes(4));
                 $notifStmt->execute([$notifId, $member['user_id'], 'approved',
-                    "D\u00E9pense approuv\u00E9e",
-                    "La d\u00E9pense \u00AB {$pending['description']} \u00BB de " . number_format($pending['amount'], 2, ',', ' ') . " TND a été approuv\u00E9e par tous les membres.",
+                    "Dépense approuvée",
+                    "La dépense « {$pending['description']} » de " . number_format($pending['amount'], 2, ',', ' ') . " TND a été approuvée par tous les membres.",
                     $txId
                 ]);
             }
