@@ -2,6 +2,7 @@ function renderShared() {
   const all = DB.get('sharedBudgets') || [];
   const users = getUsers();
   const txs = DB.get('transactions') || [];
+  const pending = DB.get('pendingTransactions') || [];
   const mine = STATE.CU.role === 'admin' ? all : all.filter(s => s.members.includes(STATE.CU.id));
 
   document.getElementById('sharedList').innerHTML = mine.length ? mine.map(s => {
@@ -11,6 +12,12 @@ function renderShared() {
     const color = pct >= 100 ? 'var(--danger)' : pct >= 80 ? 'var(--warning)' : 'var(--success)';
     const recentTxs = txs.filter(t => s.members.includes(t.userId) && t.dest === `group-${s.id}`).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3);
     const isOwner = s.ownerId === STATE.CU.id;
+
+    // Pending items for this group
+    const groupPending = pending.filter(p => p.groupId === s.id && p.status === 'pending');
+    const myPendingApprovals = groupPending.filter(p =>
+      p.approvals && p.approvals.some(a => a.user_id === STATE.CU.id && a.status === 'pending')
+    );
 
     return `<div class="section" style="margin-bottom:20px">
       <div class="section-header">
@@ -38,10 +45,60 @@ function renderShared() {
         <span style="color:var(--text-muted)">${t('limit')}: <strong>${fmt(s.limit || 0)}</strong></span>
       </div>
       <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
+      
+      ${myPendingApprovals.length ? `<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+        <div style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--warning)">\u23F3 ${t('pendingApprovals')}</div>
+        ${myPendingApprovals.map(p => `
+          <div class="pending-item">
+            <div class="pending-info">
+              <div><strong>${p.desc}</strong></div>
+              <div style="font-size:13px;color:var(--text-muted)">${fmt(p.amount)} \u00B7 ${getUserName(p.userId)} \u00B7 ${new Date(p.date).toLocaleDateString('fr-TN')}</div>
+            </div>
+            <div class="pending-actions">
+              <button class="btn btn-sm btn-success" onclick="respondPending('${p.id}','approve')">${t('approve')}</button>
+              <button class="btn btn-sm btn-danger" onclick="respondPending('${p.id}','reject')">${t('reject')}</button>
+            </div>
+          </div>`).join('')}
+      </div>` : ''}
+
+      ${groupPending.filter(p => p.userId === STATE.CU.id).length ? `<div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">
+        <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--text-muted)">${t('myPendingRequests')}</div>
+        ${groupPending.filter(p => p.userId === STATE.CU.id).map(p => {
+          const total = p.approvals ? p.approvals.length : 0;
+          const done = p.approvals ? p.approvals.filter(a => a.status !== 'pending').length : 0;
+          return `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">
+            <span>${p.desc} \u2014 ${fmt(p.amount)}</span>
+            <span style="color:var(--text-muted)">${done}/${total} ${t('approved')}</span>
+          </div>`;
+        }).join('')}
+      </div>` : ''}
+
       ${recentTxs.length ? `<div style="margin-top:16px;font-size:12px;color:var(--text-muted);margin-bottom:8px">${t('groupTransactions')}</div>
       ${recentTxs.map(t => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span>${getUserName(t.userId)} \u00B7 ${t.desc}</span><span style="color:${t.type === 'income' ? 'var(--success)' : 'var(--danger)'}">${t.type === 'income' ? '+' : '\u2212'}${fmt(t.amount)}</span></div>`).join('')}` : ''}
     </div>`;
   }).join('') : '<div class="section"><div class="empty-state">' + t('noSharedBudget') + '</div></div>';
+}
+
+async function respondPending(pendingId, action) {
+  try {
+    const result = await apiFetch('approve.php', {
+      method: 'POST',
+      body: { id: pendingId, action }
+    });
+    // Reload pending transactions
+    const data = await apiFetch('data.php', { method: 'GET' });
+    _cache.pendingTransactions = data.pendingTransactions || [];
+    _cache.transactions = data.transactions || [];
+    _cache.notifications = data.notifications || [];
+    _cache.unreadCount = data.unreadCount || 0;
+    updateNotifBadge();
+    renderShared();
+    if (result.status === 'approved') {
+      renderShared();
+    }
+  } catch (e) {
+    alert(e.message || 'Erreur');
+  }
 }
 
 function openSharedModal(id) {

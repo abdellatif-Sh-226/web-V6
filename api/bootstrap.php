@@ -123,3 +123,72 @@ function mapSharedBudgetRow(array $row, PDO $pdo) {
         'updatedAt' => $row['updated_at'],
     ];
 }
+
+function mapPendingTransactionRow(array $row) {
+    return [
+        'id' => $row['id'],
+        'groupId' => $row['group_id'],
+        'userId' => $row['user_id'],
+        'type' => $row['type'],
+        'desc' => $row['description'],
+        'amount' => (float) $row['amount'],
+        'date' => $row['date'],
+        'catId' => $row['category_id'],
+        'notes' => $row['notes'],
+        'status' => $row['status'],
+        'createdAt' => $row['created_at'],
+        'updatedAt' => $row['updated_at'],
+    ];
+}
+
+function mapNotificationRow(array $row) {
+    return [
+        'id' => $row['id'],
+        'userId' => $row['user_id'],
+        'type' => $row['type'],
+        'title' => $row['title'],
+        'message' => $row['message'],
+        'relatedId' => $row['related_id'],
+        'read' => (bool) $row['is_read'],
+        'createdAt' => $row['created_at'],
+    ];
+}
+
+function ensureTables(PDO $pdo) {
+    $pdo->exec("CREATE TABLE IF NOT EXISTS pending_transactions (
+        id VARCHAR(64) PRIMARY KEY,
+        group_id VARCHAR(64) NOT NULL,
+        user_id VARCHAR(64) NOT NULL,
+        type VARCHAR(16) NOT NULL DEFAULT 'expense',
+        description TEXT,
+        amount DECIMAL(12,2) NOT NULL DEFAULT 0,
+        date DATE NOT NULL,
+        category_id VARCHAR(64) DEFAULT NULL,
+        notes TEXT,
+        status VARCHAR(16) NOT NULL DEFAULT 'pending',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )");
+
+    $pdo->exec("CREATE TABLE IF NOT EXISTS pending_approvals (
+        id VARCHAR(64) PRIMARY KEY,
+        pending_transaction_id VARCHAR(64) NOT NULL,
+        user_id VARCHAR(64) NOT NULL,
+        status VARCHAR(16) NOT NULL DEFAULT 'pending',
+        responded_at DATETIME DEFAULT NULL,
+        FOREIGN KEY (pending_transaction_id) REFERENCES pending_transactions(id) ON DELETE CASCADE
+    )");
+
+    $pdo->exec("CREATE TABLE IF NOT EXISTS notifications (
+        id VARCHAR(64) PRIMARY KEY,
+        user_id VARCHAR(64) NOT NULL,
+        type VARCHAR(32) NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        message TEXT,
+        related_id VARCHAR(64) DEFAULT NULL,
+        is_read TINYINT(1) NOT NULL DEFAULT 0,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )");
+}
+
+ensureTables($pdo);

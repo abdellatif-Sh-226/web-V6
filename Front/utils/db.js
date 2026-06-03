@@ -5,7 +5,10 @@ let _cache = {
   categories: [],
   transactions: [],
   budgets: [],
-  sharedBudgets: []
+  sharedBudgets: [],
+  pendingTransactions: [],
+  notifications: [],
+  unreadCount: 0
 };
 let currentUser = null;
 
@@ -60,6 +63,9 @@ async function loadAppData() {
   _cache.transactions = data.transactions || [];
   _cache.budgets = data.budgets || [];
   _cache.sharedBudgets = data.sharedBudgets || [];
+  _cache.pendingTransactions = data.pendingTransactions || [];
+  _cache.notifications = data.notifications || [];
+  _cache.unreadCount = data.unreadCount || 0;
   currentUser = data.currentUser || null;
 }
 

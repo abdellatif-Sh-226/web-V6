@@ -40,6 +40,7 @@ function buildSidebar() {
       ).join('')}
     </nav>
     <div class="sidebar-bottom">
+      <div class="notif-bell-wrap">${buildNotificationBell()}</div>
       <div class="nav-item" onclick="doLogout()">
         <span class="nav-icon">\uD83D\uDEAA</span>${t('logout')}
       </div>

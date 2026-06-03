@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="assets/css/layout.css">
   <link rel="stylesheet" href="assets/css/sidebar.css">
   <link rel="stylesheet" href="assets/css/tableTransaction.css">
+  <link rel="stylesheet" href="assets/css/notifications.css">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
@@ -49,6 +50,11 @@
     <div class="form-group"><label data-i18n="txDest">Destination</label><select id="txDest" onchange="syncTxTypeToDestination()"><option value="wallet" data-i18n="wallet">&#128241; Mon portefeuille</option></select></div>
     <div class="form-group"><label data-i18n="txCat">Cat&#233;gorie</label><select id="txCat"></select></div>
     <div class="form-group"><label data-i18n="txNotes">Notes (optionnel)</label><textarea id="txNotes" rows="2" placeholder="..."></textarea></div>
+    <div id="txPendingRow" class="form-group" style="display:none">
+      <label class="pending-chk-label">
+        <input type="checkbox" id="txPendingChk"> <span data-i18n="askApproval">Demander l'approbation du groupe</span>
+      </label>
+    </div>
     <div class="modal-actions">
       <button class="btn btn-secondary" onclick="closeModal('txModal')" data-i18n="cancel">Annuler</button>
       <button class="btn" onclick="saveTx()" data-i18n="save">Enregistrer</button>
@@ -158,6 +164,8 @@
 <script src="js/shared.js"></script>
 <script src="js/profile.js"></script>
 <script src="js/settings.js"></script>
+<script src="utils/notifications.js"></script>
+<script src="components/notificationBell.js"></script>
 
 </body>
 </html>

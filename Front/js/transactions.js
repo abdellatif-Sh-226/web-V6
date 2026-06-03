@@ -10,6 +10,9 @@ function openTxModal(id) {
   destHTML += shared.map(s => `<option value="group-${s.id}">\uD83D\uDC65 ${s.name}</option>`).join('');
   document.getElementById('txDest').innerHTML = destHTML;
 
+  const pendingRow = document.getElementById('txPendingRow');
+  if (pendingRow) pendingRow.style.display = 'none';
+
   if (id) {
     const tx = (DB.get('transactions') || []).find(t => t.id === id);
     if (!tx) return;
@@ -46,16 +49,20 @@ function updateTxCategoryOptions(dest, selectedCat) {
 function syncTxTypeToDestination() {
   const dest = document.getElementById('txDest').value;
   const typeEl = document.getElementById('txType');
+  const pendingRow = document.getElementById('txPendingRow');
   if (dest.startsWith('group-') || dest.startsWith('budget-')) {
     typeEl.value = 'expense';
     typeEl.disabled = true;
   } else {
     typeEl.disabled = false;
   }
+  if (pendingRow) {
+    pendingRow.style.display = dest.startsWith('group-') ? '' : 'none';
+  }
   updateTxCategoryOptions(dest, document.getElementById('txCat')?.value);
 }
 
-function saveTx() {
+async function saveTx() {
   let type = document.getElementById('txType').value;
   const desc = document.getElementById('txDesc').value.trim();
   const amount = parseFloat(document.getElementById('txAmount').value);
@@ -63,8 +70,32 @@ function saveTx() {
   const catId = document.getElementById('txCat').value;
   const notes = document.getElementById('txNotes').value.trim();
   const dest = document.getElementById('txDest').value;
+  const pendingChk = document.getElementById('txPendingChk');
+  const askApproval = pendingChk ? pendingChk.checked : false;
+
   if (!desc || !amount || !date || !dest) return;
   if (dest.startsWith('group-') || dest.startsWith('budget-')) type = 'expense';
+
+  // If group destination and ask for approval, create pending transaction
+  if (dest.startsWith('group-') && askApproval && !STATE.editTxId) {
+    const groupId = dest.replace('group-', '');
+    const pendingId = uid();
+    try {
+      await apiFetch('pending.php', {
+        method: 'POST',
+        body: { id: pendingId, groupId, desc, amount, date, catId, notes }
+      });
+      _showSaveIndicator();
+      closeModal('txModal');
+      renderTransactionsTable();
+      refreshNotifications();
+      if (typeof renderShared === 'function') renderShared();
+    } catch (e) {
+      alert(e.message || 'Erreur lors de la cr\u00E9ation de la demande');
+    }
+    return;
+  }
+
   let txs = DB.get('transactions') || [];
   if (STATE.editTxId) {
     txs = txs.map(t => t.id === STATE.editTxId ? { ...t, type, desc, amount, date, catId, notes, dest } : t);
@@ -79,9 +110,7 @@ function saveTx() {
   }
 }
 
-function editTx(id) {
-  openTxModal(id);
-}
+function editTx(id) { openTxModal(id); }
 
 function deleteTx(id) {
   if (!confirm(t('confirmDelete'))) return;

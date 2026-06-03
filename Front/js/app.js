@@ -58,6 +58,7 @@ function enterApp() {
     sidebarEl.innerHTML = buildSidebar();
   }
 
+  initNotifications();
   showPage('dashboard');
 }
 
@@ -87,6 +88,7 @@ function startAutoRefresh() {
         if (currentPage === 'page-shared') renderShared();
         if (currentPage === 'page-dashboard') renderDashboard();
       }
+      refreshNotifications();
     } catch (e) { console.log('Auto-refresh check failed', e); }
   }, 5000);
 }
