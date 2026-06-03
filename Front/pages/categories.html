@@ -1,0 +1,21 @@
+<div class="page-header">
+  <div>
+    <div class="page-title" id="catPageTitle">Catégories</div>
+    <div class="page-subtitle" id="catPageSub"></div>
+  </div>
+  <button class="btn btn-sm" onclick="openCatModal()">+ Ajouter</button>
+</div>
+<div class="section" id="catSection">
+  <div id="catPrivateNote" style="display:none;margin-bottom:16px;font-size:13px;color:var(--text-muted)">
+    Ajoutez des catégories privées à votre compte. Elles ne seront visibles que par vous.
+  </div>
+  <table class="table">
+    <thead><tr>
+      <th>Nom</th>
+      <th>Couleur</th>
+      <th>Utilisée dans</th>
+      <th>Actions</th>
+    </tr></thead>
+    <tbody id="catBody"></tbody>
+  </table>
+</div>

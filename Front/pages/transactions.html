@@ -1,0 +1,35 @@
+<div class="page-header">
+  <div>
+    <div class="page-title" id="txPageTitle">Mes transactions</div>
+    <div class="page-subtitle" id="txPageSub" style="display:none">Vous ne voyez que vos propres transactions</div>
+  </div>
+  <button class="btn btn-sm" onclick="openTxModal()">+ Ajouter</button>
+</div>
+<div class="section">
+  <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+    <select id="txFilterType" onchange="renderTransactionsTable()" class="filter-select">
+      <option value="">Tous les types</option>
+      <option value="income">Revenus</option>
+      <option value="expense">Dépenses</option>
+    </select>
+    <select id="txFilterCat" onchange="renderTransactionsTable()" class="filter-select">
+      <option value="">Toutes catégories</option>
+    </select>
+    <select id="txFilterUser" onchange="renderTransactionsTable()" class="filter-select" style="display:none">
+      <option value="">Tous les utilisateurs</option>
+    </select>
+  </div>
+  <table class="table">
+    <thead><tr>
+      <th>Date</th>
+      <th>Description</th>
+      <th>Catégorie</th>
+      <th>Type</th>
+      <th>Destination</th>
+      <th id="txUserHeader" style="display:none">Par</th>
+      <th>Montant</th>
+      <th>Actions</th>
+    </tr></thead>
+    <tbody id="txBody"></tbody>
+  </table>
+</div>

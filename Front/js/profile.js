@@ -1,6 +1,6 @@
 function openProfileModal() {
-  document.getElementById('profName').value = CU.name;
-  document.getElementById('profEmail').value = CU.email;
+  document.getElementById('profName').value = STATE.CU.name;
+  document.getElementById('profEmail').value = STATE.CU.email;
   document.getElementById('profPwd').value = '';
   document.getElementById('profMsg').textContent = '';
   document.getElementById('profMsg').className = 'auth-err';
@@ -16,11 +16,10 @@ function saveProfile() {
     document.getElementById('profMsg').textContent = 'Nom et email requis.';
     return;
   }
-  DB.set('users', getUsers().map(u => u.id === CU.id ? { ...u, name, email, pwd: pwd || u.pwd } : u));
-  CU = { ...CU, name, email, pwd: pwd || CU.pwd };
-  document.getElementById('sidebarAvatar').textContent = name.charAt(0).toUpperCase();
-  document.getElementById('sidebarName').textContent = name;
+  DB.set('users', getUsers().map(u => u.id === STATE.CU.id ? { ...u, name, email, pwd: pwd || u.pwd } : u));
+  STATE.CU = { ...STATE.CU, name, email, pwd: pwd || STATE.CU.pwd };
+  updateSidebarUser();
   document.getElementById('profMsg').className = 'auth-err ok';
-  document.getElementById('profMsg').textContent = 'Profil mis à jour !';
+  document.getElementById('profMsg').textContent = 'Profil mis \u00E0 jour !';
   setTimeout(() => closeModal('profileModal'), 1000);
 }

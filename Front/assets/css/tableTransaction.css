@@ -1,0 +1,80 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th {
+  text-align: left;
+  padding: 10px 12px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  vertical-align: middle;
+}
+
+.table tr:last-child td { border-bottom: none; }
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge-income { background: rgba(74, 222, 128, 0.15); color: var(--success); }
+.badge-expense { background: rgba(248, 113, 113, 0.15); color: var(--danger); }
+.badge-admin { background: rgba(233, 69, 96, 0.2); color: var(--accent); }
+.badge-user { background: rgba(15, 52, 96, 0.6); color: #7eb2dd; }
+
+.progress-bar {
+  height: 8px;
+  background: var(--primary);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+
+.actions { display: flex; gap: 6px; }
+
+.icon-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 5px 9px;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+.icon-btn.del:hover { border-color: var(--danger); color: var(--danger); }
+
+.category-color { display: flex; align-items: center; gap: 8px; }
+.color-swatch { width: 24px; height: 24px; border-radius: 6px; }
+.color-label { font-size: 12px; color: var(--text-muted); }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
