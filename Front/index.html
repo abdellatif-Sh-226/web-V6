@@ -10,6 +10,9 @@
   <link rel="stylesheet" href="assets/css/sidebar.css">
   <link rel="stylesheet" href="assets/css/tableTransaction.css">
   <link rel="stylesheet" href="assets/css/notifications.css">
+  <link rel="stylesheet" href="assets/css/light-theme.css">
+
+  <script>if(localStorage.getItem('budgetcollab_theme')==='light'){document.documentElement.classList.add('light-mode');document.documentElement.style.colorScheme='light';}</script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
@@ -168,6 +171,8 @@
 <script src="js/settings.js"></script>
 <script src="js/notificationsPage.js"></script>
 <script src="utils/notifications.js"></script>
+<script src="js/theme.js"></script>
+<script>applyTheme();</script>
 
 </body>
 </html>

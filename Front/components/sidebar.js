@@ -46,6 +46,9 @@ function buildSidebar() {
       ).join('')}
     </nav>
     <div class="sidebar-bottom">
+      <div class="nav-item" onclick="toggleTheme()" style="border-top:1px solid var(--border);margin-bottom:4px">
+        <span class="nav-icon theme-toggle-icon">\u2600\uFE0F</span><span data-i18n="theme">Theme</span>
+      </div>
       <div class="nav-item" onclick="doLogout()">
         <span class="nav-icon">\uD83D\uDEAA</span>${t('logout')}
       </div>

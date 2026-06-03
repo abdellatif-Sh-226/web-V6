@@ -42,6 +42,15 @@
 
 
   <div class="section">
+    <div class="section-title" style="margin-bottom:20px" data-i18n="theme">&#127769; Th&egrave;me</div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px" data-i18n="themeDesc">Changer l'apparence de l'interface</div>
+    <button class="btn btn-sm" onclick="toggleTheme()" style="display:inline-flex;align-items:center;gap:8px">
+      <span class="theme-toggle-icon">&#9728;&#65039;</span>
+      <span id="themeLabel" data-i18n="switchTheme">Basculer en mode clair/sombre</span>
+    </button>
+  </div>
+
+  <div class="section">
     <div class="section-title" style="margin-bottom:20px" data-i18n="changePassword">&#128273; Mot de passe</div>
     <div class="form-group"><label data-i18n="currentPassword">Mot de passe actuel</label><input type="password"
         id="settingsOldPwd"></div>

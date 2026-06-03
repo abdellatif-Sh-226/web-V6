@@ -1,0 +1,35 @@
+.light-mode {
+  --primary: #f0f2f5;
+  --accent: #e94560;
+  --accent2: #2563eb;
+  --surface: #ffffff;
+  --surface2: #f0f2f5;
+  --text: #1a1a2e;
+  --text-muted: #6b7280;
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --border: rgba(0,0,0,0.1);
+}
+
+.light-mode .page-header .page-title {
+  color: #1a1a2e;
+}
+
+.light-mode .section {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.light-mode .auth-wrap {
+  background: linear-gradient(135deg, #f0f2f5 0%, #e2e5ea 50%, #d1d5db 100%);
+}
+
+.light-mode input,
+.light-mode select,
+.light-mode textarea {
+  color: #1a1a2e;
+}
+
+.light-mode .filter-select {
+  color: #1a1a2e;
+}
