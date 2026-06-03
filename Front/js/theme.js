@@ -2,14 +2,9 @@ function toggleTheme() {
   const root = document.documentElement;
   root.classList.toggle('light-mode');
   const isLight = root.classList.contains('light-mode');
-  localStorage.setItem('budgetcollab_theme', isLight ? 'light' : 'dark');
-  root.style.colorScheme = isLight ? 'light' : 'dark';
-  updateThemeIcons();
-}
+  localStorage.setItem('monexa_theme', isLight ? 'light' : 'dark');
 
-function applyTheme() {
-  const root = document.documentElement;
-  const saved = localStorage.getItem('budgetcollab_theme');
+  const saved = localStorage.getItem('monexa_theme');
   if (saved === 'light') {
     root.classList.add('light-mode');
     root.style.colorScheme = 'light';

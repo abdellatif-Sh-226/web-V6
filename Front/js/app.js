@@ -15,6 +15,73 @@ async function initApp() {
   applyTranslations();
 }
 
+let _isRegisterMode = false;
+
+function toggleAuthMode() {
+  _isRegisterMode = !_isRegisterMode;
+  const nameGroup = document.getElementById('authNameGroup');
+  const confirmGroup = document.getElementById('authConfirmGroup');
+  const btn = document.getElementById('authSubmitBtn');
+  const link = document.getElementById('authToggleLink');
+  const text = document.getElementById('authToggleText');
+  const sub = document.getElementById('authSub');
+  const pwdGroup = document.getElementById('authPwdGroup');
+
+  if (_isRegisterMode) {
+    nameGroup.style.display = '';
+    confirmGroup.style.display = '';
+    btn.textContent = t('signUp');
+    btn.setAttribute('data-i18n', 'signUp');
+    btn.onclick = doRegister;
+    link.textContent = t('signInLink');
+    link.setAttribute('data-i18n', 'signInLink');
+    text.textContent = t('hasAccount');
+    text.setAttribute('data-i18n', 'hasAccount');
+    sub.textContent = t('signUpSub');
+    sub.setAttribute('data-i18n', 'signUpSub');
+  } else {
+    nameGroup.style.display = 'none';
+    confirmGroup.style.display = 'none';
+    btn.textContent = t('login');
+    btn.setAttribute('data-i18n', 'login');
+    btn.onclick = doLogin;
+    link.textContent = t('signUpLink');
+    link.setAttribute('data-i18n', 'signUpLink');
+    text.textContent = t('noAccount');
+    text.setAttribute('data-i18n', 'noAccount');
+    sub.textContent = t('loginSub');
+    sub.setAttribute('data-i18n', 'loginSub');
+  }
+  document.getElementById('authErr').textContent = '';
+}
+
+async function doRegister() {
+  const name = document.getElementById('authName').value.trim();
+  const email = document.getElementById('loginEmail').value.trim();
+  const pwd = document.getElementById('loginPwd').value;
+  const confirm = document.getElementById('authConfirmPwd').value;
+  if (!name || !email || !pwd || !confirm) {
+    document.getElementById('authErr').textContent = t('allFieldsRequired');
+    return;
+  }
+  if (pwd !== confirm) {
+    document.getElementById('authErr').textContent = t('passwordMismatch');
+    return;
+  }
+  try {
+    await apiFetch('register.php', { method: 'POST', body: { name, email, password: pwd } });
+    await loadAppData();
+    STATE.CU = getCurrentUser();
+    if (!STATE.CU) throw new Error(t('userNotFound'));
+    ensureDefaultPortfolio();
+    document.getElementById('authErr').textContent = '';
+    startAutoRefresh();
+    enterApp();
+  } catch (e) {
+    document.getElementById('authErr').textContent = e.message || t('authInvalid');
+  }
+}
+
 async function doLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const pwd = document.getElementById('loginPwd').value;
@@ -41,11 +108,15 @@ async function doLogout() {
   try { await apiFetch('logout.php', { method: 'POST' }); } catch (e) { console.error('Logout error', e); }
   STATE.CU = null;
   currentUser = null;
+  _isRegisterMode = true;
+  toggleAuthMode();
   document.getElementById('authPage').style.display = 'flex';
   document.getElementById('mainApp').style.display = 'none';
   document.getElementById('loginEmail').value = '';
   document.getElementById('loginPwd').value = '';
   document.getElementById('authErr').textContent = '';
+  document.getElementById('authName').value = '';
+  document.getElementById('authConfirmPwd').value = '';
 }
 
 function enterApp() {

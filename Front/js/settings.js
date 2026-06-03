@@ -3,11 +3,11 @@ function renderSettings() {
   document.getElementById('settingsName').value = cu.name;
   document.getElementById('settingsEmail').value = cu.email;
 
-  const currentLang = localStorage.getItem('budgetcollab_lang') || 'fr';
+  const currentLang = localStorage.getItem('monexa_lang') || 'fr';
   const langRadio = document.querySelector(`input[name="lang"][value="${currentLang}"]`);
   if (langRadio) langRadio.checked = true;
 
-  const curCode = localStorage.getItem('budgetcollab_currency') || 'TND';
+  const curCode = localStorage.getItem('monexa_currency') || 'TND';
   document.getElementById('settingsCurrency').value = curCode;
   updateCurrencyPreview(curCode);
 

@@ -6,12 +6,12 @@ function t(key) {
 
 function setLanguage(lang) {
   _lang = lang || {};
-  if (lang === LANG_FR) localStorage.setItem('budgetcollab_lang', 'fr');
-  else if (lang === LANG_EN) localStorage.setItem('budgetcollab_lang', 'en');
+  if (lang === LANG_FR) localStorage.setItem('monexa_lang', 'fr');
+  else if (lang === LANG_EN) localStorage.setItem('monexa_lang', 'en');
 }
 
 function initLanguage() {
-  const stored = localStorage.getItem('budgetcollab_lang');
+  const stored = localStorage.getItem('monexa_lang');
   if (stored === 'en') { setLanguage(LANG_EN); return 'en'; }
   setLanguage(LANG_FR);
   return 'fr';
@@ -39,12 +39,12 @@ const CURRENCIES = {
 };
 
 function getCurrency() {
-  const code = localStorage.getItem('budgetcollab_currency') || 'TND';
+  const code = localStorage.getItem('monexa_currency') || 'TND';
   return CURRENCIES[code] || CURRENCIES.TND;
 }
 
 function setCurrency(code) {
-  if (CURRENCIES[code]) localStorage.setItem('budgetcollab_currency', code);
+  if (CURRENCIES[code]) localStorage.setItem('monexa_currency', code);
 }
 
 function fmt(n) {
